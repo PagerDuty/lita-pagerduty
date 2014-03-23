@@ -33,7 +33,6 @@ Lita pager incident <incident ID>       - Show a specific incident
 
 ```
 Lita pager notes <incident ID>          - Show all notes for a specific incident
-Lita pager note <incident ID> <content> - Add a note to a specific incident
 ```
 
 ### Acknowledging an incident

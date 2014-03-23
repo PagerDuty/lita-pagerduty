@@ -55,7 +55,8 @@ module Lita
         :note,
         command: true,
         help: {
-          'pager note 1234 some text' => 'Add a note to a specific incident'
+          'pager note 1234 some text' =>
+          'Add a note to a specific incident (not implemented yet)'
         }
       )
 
@@ -227,7 +228,7 @@ module Lita
       end
 
       def note(response)
-        response.reply('broken')
+        response.reply('Not implemented yet.')
       end
 
       def ack_all(response)

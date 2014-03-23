@@ -151,10 +151,9 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     end
 
     describe '#whos_on_call' do
-      describe 'when someone is on call' do
-      end
-
-      describe 'when no one is on call' do
+      it 'shows a warning' do
+        send_command("who's on call?")
+        expect(replies.last).to eq('Not implemented yet.')
       end
     end
 
@@ -297,10 +296,9 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     end
 
     describe '#note' do
-      describe 'when the incident exists' do
-      end
-
-      describe 'when the incident does not exist' do
+      it 'shows a warning' do
+        send_command('pager note ABC123 some text')
+        expect(replies.last).to eq('Not implemented yet.')
       end
     end
 
