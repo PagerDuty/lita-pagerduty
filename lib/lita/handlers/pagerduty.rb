@@ -114,6 +114,25 @@ module Lita
         }
       )
 
+      route(
+        /^pager\sidentify\s(.+)$/,
+        :identify,
+        command: true,
+        help: {
+          'pager identify <email address>' =>
+          'Associate your chat user with your email address'
+        }
+      )
+
+      route(
+        /^pager\sforget$/,
+        :forget,
+        command: true,
+        help: {
+          'pager forget' => 'Remove your chat user / email association'
+        }
+      )
+
       def self.default_config(config)
         config.api_key = nil
         config.subdomain = nil
@@ -121,6 +140,27 @@ module Lita
 
       def whos_on_call(response)
         response.reply('broken')
+      end
+
+      def identify(response)
+        email = response.matches[0][0]
+        stored_email = redis.get("email_#{response.user.id}")
+        if !stored_email
+          redis.set("email_#{response.user.id}", email)
+          response.reply('You have now been identified.')
+        else
+          response.reply('You have already been identified!')
+        end
+      end
+
+      def forget(response)
+        stored_email = redis.get("email_#{response.user.id}")
+        if stored_email
+          redis.del("email_#{response.user.id}")
+          response.reply('Your email has now been forgotten.')
+        else
+          response.reply('No email on record for you.')
+        end
       end
 
       def incidents_all(response)
@@ -137,7 +177,23 @@ module Lita
       end
 
       def incidents_mine(response)
-        response.reply('broken')
+        email = redis.get("email_#{response.user.id}")
+        if email
+          incidents = fetch_my_incidents(email)
+          if incidents.count > 0
+            incidents.each do |incident|
+              response.reply("#{incident.id}: " \
+                             "\"#{incident.trigger_summary_data.subject}\", " \
+                             "assigned to: #{incident.assigned_to_user.email}")
+            end
+          else
+            response.reply('You have no triggered, open, or acknowledged ' \
+                           'incidents')
+          end
+        else
+          response.reply('You have not identified yourself (use the help ' \
+                         'command for more info)')
+        end
       end
 
       def incident(response)
@@ -215,15 +271,22 @@ module Lita
 
       def fetch_all_incidents
         client = pd_client
-        incident_list = []
+        list = []
         # FIXME: Workaround on current PD Gem
         client.incidents.incidents.each do |incident|
-          incident_list.push(incident) if incident.status != 'resolved'
+          list.push(incident) if incident.status != 'resolved'
         end
-        incident_list
+        list
       end
 
       def fetch_my_incidents(email)
+        # FIXME: Workaround
+        incidents = fetch_all_incidents
+        list = []
+        incidents.each do |incident|
+          list.push(incident) if incident.assigned_to_user.email == email
+        end
+        list
       end
 
       def fetch_incident(incident_id)

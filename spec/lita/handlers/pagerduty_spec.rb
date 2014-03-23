@@ -104,6 +104,8 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
 
   it { routes_command('who\'s on call').to(:whos_on_call) }
   it { routes_command('who\'s on call?').to(:whos_on_call) }
+  it { routes_command('pager identify foobar@example.com').to(:identify) }
+  it { routes_command('pager forget').to(:forget) }
   it { routes_command('pager incidents all').to(:incidents_all) }
   it { routes_command('pager incidents mine').to(:incidents_mine) }
   it { routes_command('pager incident ABC123').to(:incident) }
@@ -146,6 +148,47 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
       end
     end
 
+    describe '#identify' do
+      describe 'when that email is new' do
+        it 'shows a successful identification' do
+          foo = Lita::User.create(123, name: 'foo')
+          send_command('pager identify foo@example.com', as: foo)
+          expect(replies.last).to eq('You have now been identified.')
+        end
+      end
+
+      # TODO: It'd be great to validate this against the existing
+      # users on the PD account.
+
+      describe 'when that email exists already' do
+        it 'shows a warning' do
+          baz = Lita::User.create(321, name: 'baz')
+          send_command('pager identify baz@example.com', as: baz)
+          send_command('pager identify baz@example.com', as: baz)
+          expect(replies.last).to eq('You have already been identified!')
+        end
+      end
+    end
+
+    describe '#forget' do
+      describe 'when that user is associated' do
+        it 'shows a successful forget' do
+          foo = Lita::User.create(123, name: 'foo')
+          send_command('pager identify foo@example.com', as: foo)
+          send_command('pager forget', as: foo)
+          expect(replies.last).to eq('Your email has now been forgotten.')
+        end
+      end
+
+      describe 'when that user is not associated' do
+        it 'shows a warning' do
+          foo = Lita::User.create(123, name: 'foo')
+          send_command('pager forget', as: foo)
+          expect(replies.last).to eq('No email on record for you.')
+        end
+      end
+    end
+
     describe '#incidents_all' do
       describe 'when there are open incidents' do
         it 'shows a list of incidents' do
@@ -168,9 +211,33 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
 
     describe '#incidents_mine' do
       describe 'when there are open incidents for the user' do
+        it 'shows a list of incidents' do
+          bar = Lita::User.create(123, name: 'bar')
+          expect(Pagerduty).to receive(:new) { incidents }
+          send_command('pager identify bar@example.com', as: bar)
+          send_command('pager incidents mine', as: bar)
+          expect(replies.last).to eq('ABC789: "Still broke", assigned to: ' \
+                                     'bar@example.com')
+        end
       end
 
       describe 'when there are no open incidents for the user' do
+        it 'shows no incidents' do
+          foo = Lita::User.create(123, name: 'foo')
+          expect(Pagerduty).to receive(:new) { incidents }
+          send_command('pager identify foo@example.com', as: foo)
+          send_command('pager incidents mine', as: foo)
+          expect(replies.last).to eq('You have no triggered, open, or ' \
+                                     'acknowledged incidents')
+        end
+      end
+
+      describe 'when the user has not identified themselves' do
+        it 'shows a warning' do
+          send_command('pager incidents mine')
+          expect(replies.last).to eq('You have not identified yourself (use ' \
+                                     'the help command for more info)')
+        end
       end
     end
 
