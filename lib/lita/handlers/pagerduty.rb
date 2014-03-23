@@ -212,7 +212,8 @@ module Lita
       def acknowledge_incident(incident_id)
         incident = fetch_incident(incident_id)
         if incident != 'No results'
-          if incident.status != 'acknowledged'
+          if incident.status != 'acknowledged' &&
+             incident.status != 'resolved'
             results = incident.acknowledge
             if results.key?('status') && results['status'] == 'acknowledged'
               "#{incident_id}: Incident acknowledged"
