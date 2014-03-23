@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/esigler/lita-pagerduty.png?branch=master)](https://travis-ci.org/esigler/lita-pagerduty)
 [![Code Climate](https://codeclimate.com/github/esigler/lita-pagerduty.png)](https://codeclimate.com/github/esigler/lita-pagerduty)
-[![Coverage Status](https://coveralls.io/repos/esigler/lita-pagerduty/badge.png)](https://coveralls.io/r/esigler/lita-pagerduty)
+[![Coverage Status](https://coveralls.io/repos/esigler/lita-pagerduty/badge.png?branch=master)](https://coveralls.io/r/esigler/lita-pagerduty?branch=master)
 
 PagerDuty (http://pagerduty.com) handler for checking who's on call, scheduling, ack, resolve, etc.
 
