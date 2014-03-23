@@ -1,1 +1,1 @@
-require "lita/handlers/pagerduty"
+require 'lita/handlers/pagerduty'

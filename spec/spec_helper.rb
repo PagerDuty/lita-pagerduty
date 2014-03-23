@@ -1,10 +1,10 @@
-require "simplecov"
-require "coveralls"
+require 'simplecov'
+require 'coveralls'
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   SimpleCov::Formatter::HTMLFormatter,
   Coveralls::SimpleCov::Formatter
 ]
-SimpleCov.start { add_filter "/spec/" }
+SimpleCov.start { add_filter '/spec/' }
 
-require "lita-pagerduty"
-require "lita/rspec"
+require 'lita-pagerduty'
+require 'lita/rspec'

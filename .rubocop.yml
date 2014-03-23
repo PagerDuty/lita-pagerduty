@@ -1,0 +1,8 @@
+MethodLength:
+  Max: 15
+
+ClassLength:
+  Max: 300
+
+Documentation:
+  Enabled: false
