@@ -55,7 +55,6 @@ Lita pager resolve <incident ID>        - Resolve a specific incident
 ### Misc
 
 ```
-Lita who's on call                      - Return the names of everyone currently on call
 Lita pager identify <email address>     - Associate your chat user with your email address
 Lita pager forget                       - Remove your chat user / email association
 ```

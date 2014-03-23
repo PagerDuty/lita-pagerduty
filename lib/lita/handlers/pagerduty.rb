@@ -9,7 +9,8 @@ module Lita
         :whos_on_call,
         command: true,
         help: {
-          'who\'s on call?' => 'Return the names of everyone currently on call'
+          'who\'s on call?' =>
+          'Show everyone currently on call (not implemented yet)'
         }
       )
 
@@ -139,7 +140,7 @@ module Lita
       end
 
       def whos_on_call(response)
-        response.reply('broken')
+        response.reply('Not implemented yet.')
       end
 
       def identify(response)
