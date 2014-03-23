@@ -275,11 +275,42 @@ module Lita
       end
 
       def resolve_all(response)
-        response.reply('broken')
+        incidents = fetch_all_incidents
+        if incidents.count > 0
+          completed = []
+          incidents.each do |incident|
+            result = resolve_incident(incident.id)
+            if result == "#{incident.id}: Incident resolved"
+              completed.push(incident.id)
+            end
+            response.reply("Resolved: #{completed.join(",")}")
+          end
+        else
+          response.reply('No triggered, open, or acknowledged incidents')
+        end
       end
 
       def resolve_mine(response)
-        response.reply('broken')
+        email = redis.get("email_#{response.user.id}")
+        if email
+          incidents = fetch_my_incidents(email)
+          if incidents.count > 0
+            completed = []
+            incidents.each do |incident|
+              result = resolve_incident(incident.id)
+              if result == "#{incident.id}: Incident resolved"
+                completed.push(incident.id)
+              end
+              response.reply("Resolved: #{completed.join(",")}")
+            end
+          else
+            response.reply('You have no triggered, open, or acknowledged ' \
+                           'incidents')
+          end
+        else
+          response.reply('You have not identified yourself (use the help ' \
+                         'command for more info)')
+        end
       end
 
       def resolve(response)
