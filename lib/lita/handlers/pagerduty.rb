@@ -124,7 +124,16 @@ module Lita
       end
 
       def incidents_all(response)
-        response.reply('broken')
+        incidents = fetch_all_incidents
+        if incidents.count > 0
+          incidents.each do |incident|
+            response.reply("#{incident.id}: " \
+                           "\"#{incident.trigger_summary_data.subject}\", " \
+                           "assigned to: #{incident.assigned_to_user.email}")
+          end
+        else
+          response.reply('No triggered, open, or acknowledged incidents')
+        end
       end
 
       def incidents_mine(response)
@@ -202,6 +211,19 @@ module Lita
 
         ::Pagerduty.new(token: Lita.config.handlers.pagerduty.api_key,
                         subdomain: Lita.config.handlers.pagerduty.subdomain)
+      end
+
+      def fetch_all_incidents
+        client = pd_client
+        incident_list = []
+        # FIXME: Workaround on current PD Gem
+        client.incidents.incidents.each do |incident|
+          incident_list.push(incident) if incident.status != 'resolved'
+        end
+        incident_list
+      end
+
+      def fetch_my_incidents(email)
       end
 
       def fetch_incident(incident_id)

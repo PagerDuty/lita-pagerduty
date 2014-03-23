@@ -2,9 +2,42 @@ require 'spec_helper'
 require 'pagerduty'
 
 describe Lita::Handlers::Pagerduty, lita_handler: true do
-  let(:no_incidents) do
+  let(:no_incident) do
     client = double
     expect(client).to receive(:get_incident) { 'No results' }
+    client
+  end
+
+  let(:no_incidents) do
+    client = double
+    expect(client).to receive(:incidents) do
+      double(
+        incidents: []
+      )
+    end
+    client
+  end
+
+  let(:incidents) do
+    client = double
+    expect(client).to receive(:incidents) do
+      double(
+        incidents: [
+          double(
+            id: 'ABC123',
+            status: 'resolved',
+            trigger_summary_data: double(subject: 'something broke'),
+            assigned_to_user: double(email: 'foo@example.com')
+          ),
+          double(
+            id: 'ABC789',
+            status: 'triggered',
+            trigger_summary_data: double(subject: 'Still broke'),
+            assigned_to_user: double(email: 'bar@example.com')
+          )
+        ]
+      )
+    end
     client
   end
 
@@ -115,9 +148,21 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
 
     describe '#incidents_all' do
       describe 'when there are open incidents' do
+        it 'shows a list of incidents' do
+          expect(Pagerduty).to receive(:new) { incidents }
+          send_command('pager incidents all')
+          expect(replies.last).to eq('ABC789: "Still broke", assigned to: '\
+                                     'bar@example.com')
+        end
       end
 
       describe 'when there are no open incidents' do
+        it 'shows a warning' do
+          expect(Pagerduty).to receive(:new) { no_incidents }
+          send_command('pager incidents all')
+          expect(replies.last).to eq('No triggered, open, or acknowledged ' \
+                                     'incidents')
+        end
       end
     end
 
@@ -141,7 +186,7 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
 
       describe 'when the incident does not exist' do
         it 'shows an error' do
-          expect(Pagerduty).to receive(:new) { no_incidents }
+          expect(Pagerduty).to receive(:new) { no_incident }
           send_command('pager incident ABC123')
           expect(replies.last).to eq('ABC123: Incident not found')
         end
@@ -167,7 +212,7 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
 
       describe 'when the incident does not exist' do
         it 'shows an error' do
-          expect(Pagerduty).to receive(:new) { no_incidents }
+          expect(Pagerduty).to receive(:new) { no_incident }
           send_command('pager notes ABC123')
           expect(replies.last).to eq('ABC123: Incident not found')
         end
@@ -217,7 +262,7 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
 
       describe 'when the incident does not exist' do
         it 'shows an error' do
-          expect(Pagerduty).to receive(:new) { no_incidents }
+          expect(Pagerduty).to receive(:new) { no_incident }
           send_command('pager ack ABC123')
           expect(replies.last).to eq('ABC123: Incident not found')
         end
@@ -259,7 +304,7 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
 
       describe 'when the incident does not exist' do
         it 'shows an error' do
-          expect(Pagerduty).to receive(:new) { no_incidents }
+          expect(Pagerduty).to receive(:new) { no_incident }
           send_command('pager resolve ABC123')
           expect(replies.last).to eq('ABC123: Incident not found')
         end
