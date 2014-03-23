@@ -230,11 +230,42 @@ module Lita
       end
 
       def ack_all(response)
-        response.reply('broken')
+        incidents = fetch_all_incidents
+        if incidents.count > 0
+          completed = []
+          incidents.each do |incident|
+            result = acknowledge_incident(incident.id)
+            if result == "#{incident.id}: Incident acknowledged"
+              completed.push(incident.id)
+            end
+            response.reply("Acknowledged: #{completed.join(",")}")
+          end
+        else
+          response.reply('No triggered, open, or acknowledged incidents')
+        end
       end
 
       def ack_mine(response)
-        response.reply('broken')
+        email = redis.get("email_#{response.user.id}")
+        if email
+          incidents = fetch_my_incidents(email)
+          if incidents.count > 0
+            completed = []
+            incidents.each do |incident|
+              result = acknowledge_incident(incident.id)
+              if result == "#{incident.id}: Incident acknowledged"
+                completed.push(incident.id)
+              end
+              response.reply("Acknowledged: #{completed.join(",")}")
+            end
+          else
+            response.reply('You have no triggered, open, or acknowledged ' \
+                           'incidents')
+          end
+        else
+          response.reply('You have not identified yourself (use the help ' \
+                         'command for more info)')
+        end
       end
 
       def ack(response)

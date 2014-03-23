@@ -38,6 +38,16 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
         ]
       )
     end
+    allow(client).to receive(:get_incident) do
+      double(
+        status: 'triggered',
+        trigger_summary_data: double(subject: 'Still broke'),
+        assigned_to_user: double(email: 'bar@example.com'),
+        acknowledge: { 'id' => 'ABC789', 'status' => 'acknowledged' },
+        resolve: { 'id' => 'ABC789', 'status' => 'resolved' },
+        notes: double(notes: [])
+      )
+    end
     client
   end
 
@@ -296,17 +306,51 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
 
     describe '#ack_all' do
       describe 'when there are acknowledgable incidents' do
+        it 'shows them as acknowledged' do
+          expect(Pagerduty).to receive(:new).twice { incidents }
+          send_command('pager ack all')
+          expect(replies.last).to eq('Acknowledged: ABC789')
+        end
       end
 
       describe 'when there are no acknowledgable incidents' do
+        it 'shows a warning' do
+          expect(Pagerduty).to receive(:new) { no_incidents }
+          send_command('pager ack all')
+          expect(replies.last).to eq('No triggered, open, or acknowledged ' \
+                                     'incidents')
+        end
       end
     end
 
     describe '#ack_mine' do
       describe 'when there are acknowledgable incidents for the user' do
+        it 'shows them as acknowledged' do
+          bar = Lita::User.create(123, name: 'bar')
+          expect(Pagerduty).to receive(:new).twice { incidents }
+          send_command('pager identify bar@example.com', as: bar)
+          send_command('pager ack mine', as: bar)
+          expect(replies.last).to eq('Acknowledged: ABC789')
+        end
       end
 
       describe 'when there are no acknowledgable incidents for the user' do
+        it 'shows a warning' do
+          foo = Lita::User.create(123, name: 'foo')
+          expect(Pagerduty).to receive(:new) { incidents }
+          send_command('pager identify foo@example.com', as: foo)
+          send_command('pager ack mine', as: foo)
+          expect(replies.last).to eq('You have no triggered, open, or ' \
+                                     'acknowledged incidents')
+        end
+      end
+
+      describe 'when the user has not identified themselves' do
+        it 'shows a warning' do
+          send_command('pager ack mine')
+          expect(replies.last).to eq('You have not identified yourself (use ' \
+                                     'the help command for more info)')
+        end
       end
     end
 

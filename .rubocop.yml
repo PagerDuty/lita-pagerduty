@@ -2,7 +2,7 @@ MethodLength:
   Max: 20
 
 ClassLength:
-  Max: 300
+  Max: 400
 
 Documentation:
   Enabled: false
