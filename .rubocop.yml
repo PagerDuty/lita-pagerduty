@@ -1,8 +1,11 @@
-MethodLength:
-  Max: 20
-
 ClassLength:
   Max: 400
 
 Documentation:
   Enabled: false
+
+FileName:
+  Enabled: false
+
+MethodLength:
+  Max: 20
