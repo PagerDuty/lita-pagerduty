@@ -1,8 +1,11 @@
 # lita-pagerduty
 
-[![Build Status](https://travis-ci.org/esigler/lita-pagerduty.png?branch=master)](https://travis-ci.org/esigler/lita-pagerduty)
-[![Code Climate](https://codeclimate.com/github/esigler/lita-pagerduty.png)](https://codeclimate.com/github/esigler/lita-pagerduty)
-[![Coverage Status](https://coveralls.io/repos/esigler/lita-pagerduty/badge.png?branch=master)](https://coveralls.io/r/esigler/lita-pagerduty?branch=master)
+[![Build Status](https://img.shields.io/travis/esigler/lita-pagerduty/master.svg)](https://travis-ci.org/esigler/lita-pagerduty)
+[![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://tldrlegal.com/license/mit-license)
+[![RubyGems :: RMuh Gem Version](http://img.shields.io/gem/v/lita-pagerduty.svg)](https://rubygems.org/gems/lita-pagerduty)
+[![Coveralls Coverage](https://img.shields.io/coveralls/esigler/lita-pagerduty/master.svg)](https://coveralls.io/r/esigler/lita-pagerduty)
+[![Code Climate](https://img.shields.io/codeclimate/github/esigler/lita-pagerduty.svg)](https://codeclimate.com/github/esigler/lita-pagerduty)
+[![Gemnasium](https://img.shields.io/gemnasium/esigler/lita-pagerduty.svg)](https://gemnasium.com/esigler/lita-pagerduty)
 
 PagerDuty (http://pagerduty.com) handler for checking who's on call, scheduling, ack, resolve, etc.
 
