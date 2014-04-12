@@ -9,8 +9,7 @@ module Lita
         :whos_on_call,
         command: true,
         help: {
-          'who\'s on call?' =>
-          'Show everyone currently on call (not implemented yet)'
+          t('help.whos_on_call.syntax') => t('help.whos_on_call.desc')
         }
       )
 
@@ -19,7 +18,7 @@ module Lita
         :incidents_all,
         command: true,
         help: {
-          'pager incidents all' => 'Show all open incidents'
+          t('help.incidents_all.syntax') => t('help.incidents_all.desc')
         }
       )
 
@@ -28,7 +27,7 @@ module Lita
         :incidents_mine,
         command: true,
         help: {
-          'pager incidents mine' => 'Show all open incidents assigned to me'
+          t('help.incidents_mine.syntax') => t('help.incidents_mine.desc')
         }
       )
 
@@ -37,7 +36,7 @@ module Lita
         :incident,
         command: true,
         help: {
-          'pager incident 1234' => 'Show a specific incident'
+          t('help.incident.syntax') => t('help.incident.desc')
         }
       )
 
@@ -46,7 +45,7 @@ module Lita
         :notes,
         command: true,
         help: {
-          'pager notes 1234' => 'Show all notes for a specific incident'
+          t('help.notes.syntax') => t('help.notes.desc')
         }
       )
 
@@ -55,8 +54,7 @@ module Lita
         :note,
         command: true,
         help: {
-          'pager note 1234 some text' =>
-          'Add a note to a specific incident (not implemented yet)'
+          t('help.note.syntax') => t('help.note.desc')
         }
       )
 
@@ -65,7 +63,7 @@ module Lita
         :ack_all,
         command: true,
         help: {
-          'pager ack all' => 'Acknowledge all triggered incidents'
+          t('help.ack_all.syntax') => t('help.ack_all.desc')
         }
       )
 
@@ -74,8 +72,7 @@ module Lita
         :ack_mine,
         command: true,
         help: {
-          'pager ack mine' =>
-          'Acknowledge all triggered incidents assigned to me'
+          t('help.ack_mine.syntax') => t('help.ack_mine.desc')
         }
       )
 
@@ -84,7 +81,7 @@ module Lita
         :ack,
         command: true,
         help: {
-          'pager ack 1234' => 'Acknowledge a specific incident'
+          t('help.ack.syntax') => t('help.ack.desc')
         }
       )
 
@@ -93,7 +90,7 @@ module Lita
         :resolve_all,
         command: true,
         help: {
-          'pager resolve all' => 'Resolve all triggered incidents'
+          t('help.resolve_all.syntax') => t('help.resolve_all.desc')
         }
       )
 
@@ -102,8 +99,7 @@ module Lita
         :resolve_mine,
         command: true,
         help: {
-          'pager resolve mine' =>
-          'Resolve all triggered incidents assigned to me'
+          t('help.resolve_mine.syntax') => t('help.resolve_mine.desc')
         }
       )
 
@@ -112,7 +108,7 @@ module Lita
         :resolve,
         command: true,
         help: {
-          'pager resolve 1234' => 'Resolve a specific incident'
+          t('help.resolve.syntax') => t('help.resolve.desc')
         }
       )
 
@@ -121,8 +117,7 @@ module Lita
         :identify,
         command: true,
         help: {
-          'pager identify <email address>' =>
-          'Associate your chat user with your email address'
+          t('help.identify.syntax') => t('help.identify.desc')
         }
       )
 
@@ -131,7 +126,7 @@ module Lita
         :forget,
         command: true,
         help: {
-          'pager forget' => 'Remove your chat user / email association'
+          t('help.forget.syntax') => t('help.forget.desc')
         }
       )
 
@@ -141,7 +136,7 @@ module Lita
       end
 
       def whos_on_call(response)
-        response.reply('Not implemented yet.')
+        response.reply(t('error.not_implemented'))
       end
 
       def identify(response)
@@ -149,9 +144,9 @@ module Lita
         stored_email = redis.get("email_#{response.user.id}")
         if !stored_email
           redis.set("email_#{response.user.id}", email)
-          response.reply('You have now been identified.')
+          response.reply(t('identify.complete'))
         else
-          response.reply('You have already been identified!')
+          response.reply(t('identify.already'))
         end
       end
 
@@ -159,9 +154,9 @@ module Lita
         stored_email = redis.get("email_#{response.user.id}")
         if stored_email
           redis.del("email_#{response.user.id}")
-          response.reply('Your email has now been forgotten.')
+          response.reply(t('forget.complete'))
         else
-          response.reply('No email on record for you.')
+          response.reply(t('forget.unknown'))
         end
       end
 
@@ -174,7 +169,7 @@ module Lita
                            "assigned to: #{incident.assigned_to_user.email}")
           end
         else
-          response.reply('No triggered, open, or acknowledged incidents')
+          response.reply(t('incident.none'))
         end
       end
 
@@ -189,12 +184,10 @@ module Lita
                              "assigned to: #{incident.assigned_to_user.email}")
             end
           else
-            response.reply('You have no triggered, open, or acknowledged ' \
-                           'incidents')
+            response.reply(t('incident.none_mine'))
           end
         else
-          response.reply('You have not identified yourself (use the help ' \
-                         'command for more info)')
+          response.reply(t('identify.missing'))
         end
       end
 
@@ -206,7 +199,7 @@ module Lita
                          "\"#{incident.trigger_summary_data.subject}\", " \
                          "assigned to: #{incident.assigned_to_user.email}")
         else
-          response.reply("#{incident_id}: Incident not found")
+          response.reply(t('incident.not_found', id: incident_id))
         end
       end
 
@@ -223,12 +216,12 @@ module Lita
             response.reply("#{incident_id}: No notes")
           end
         else
-          response.reply("#{incident_id}: Incident not found")
+          response.reply(t('incident.not_found', id: incident_id))
         end
       end
 
       def note(response)
-        response.reply('Not implemented yet.')
+        response.reply(t('error.not_implemented'))
       end
 
       def ack_all(response)
@@ -243,7 +236,7 @@ module Lita
             response.reply("Acknowledged: #{completed.join(",")}")
           end
         else
-          response.reply('No triggered, open, or acknowledged incidents')
+          response.reply(t('incident.none'))
         end
       end
 
@@ -261,12 +254,10 @@ module Lita
               response.reply("Acknowledged: #{completed.join(",")}")
             end
           else
-            response.reply('You have no triggered, open, or acknowledged ' \
-                           'incidents')
+            response.reply(t('incident.none_mine'))
           end
         else
-          response.reply('You have not identified yourself (use the help ' \
-                         'command for more info)')
+          response.reply(t('identify.missing'))
         end
       end
 
@@ -288,7 +279,7 @@ module Lita
             response.reply("Resolved: #{completed.join(",")}")
           end
         else
-          response.reply('No triggered, open, or acknowledged incidents')
+          response.reply(t('incident.none'))
         end
       end
 
@@ -306,12 +297,10 @@ module Lita
               response.reply("Resolved: #{completed.join(",")}")
             end
           else
-            response.reply('You have no triggered, open, or acknowledged ' \
-                           'incidents')
+            response.reply(t('incident.none_mine'))
           end
         else
-          response.reply('You have not identified yourself (use the help ' \
-                         'command for more info)')
+          response.reply(t('identify.missing'))
         end
       end
 
@@ -365,15 +354,15 @@ module Lita
              incident.status != 'resolved'
             results = incident.acknowledge
             if results.key?('status') && results['status'] == 'acknowledged'
-              "#{incident_id}: Incident acknowledged"
+              t('incident.acknowledged', id: incident_id)
             else
-              "#{incident_id}: Unable to acknowledge incident"
+              t('incident.unable_to_acknowledge', id: incident_id)
             end
           else
-            "#{incident_id}: Incident already #{incident.status}"
+            t('incident.already_set', id: incident_id, status: incident.status)
           end
         else
-          "#{incident_id}: Incident not found"
+          t('incident.not_found', id: incident_id)
         end
       end
 
@@ -383,15 +372,15 @@ module Lita
           if incident.status != 'resolved'
             results = incident.resolve
             if results.key?('status') && results['status'] == 'resolved'
-              "#{incident_id}: Incident resolved"
+              t('incident.resolved', id: incident_id)
             else
-              "#{incident_id}: Unable to resolve incident"
+              t('incident.unable_to_resolve', id: incident_id)
             end
           else
-            "#{incident_id}: Incident already #{incident.status}"
+            t('incident.already_set', id: incident_id, status: incident.status)
           end
         else
-          "#{incident_id}: Incident not found"
+          t('incident.not_found', id: incident_id)
         end
       end
     end

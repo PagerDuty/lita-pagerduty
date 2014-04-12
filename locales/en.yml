@@ -2,3 +2,64 @@ en:
   lita:
     handlers:
       pagerduty:
+        error:
+          not_implemented: Not implemented yet.
+        help:
+          ack:
+            syntax: pager ack 1234
+            desc: Acknowledge a specific incident
+          ack_all:
+            syntax: pager ack all
+            desc: Acknowledge all triggered incidents
+          ack_mine:
+            syntax: pager ack mine
+            desc: Acknowledge all triggered incidents assigned to me
+          forget:
+            syntax: pager forget
+            desc: Remove your chat user / email association
+          identify:
+            syntax: pager identify <email address>
+            desc: Associate your chat user with your email address
+          incident:
+            syntax: pager incident 1234
+            desc: Show a specific incident
+          incidents_all:
+            syntax: pager incidents all
+            desc: Show all open incidents
+          incidents_mine:
+            syntax: pager incidents mine
+            desc: Show all open incidents assigned to me
+          note:
+            syntax: pager note 1234 some text
+            desc: Add a note to a specific incident (not implemented yet)
+          notes:
+            syntax: pager notes 1234
+            desc: Show all notes for a specific incident
+          resolve:
+            syntax: pager resolve 1234
+            desc: Resolve a specific incident
+          resolve_all:
+            syntax: pager resolve all
+            desc: Resolve all triggered incidents
+          resolve_mine:
+            syntax: pager resolve mine
+            desc: Resolve all triggered incidents assigned to me
+          whos_on_call:
+            syntax: who's on call?
+            desc: Show everyone currently on call (not implemented yet)
+        identify:
+          already: You have already been identified!
+          complete: You have now been identified.
+          missing: You have not identified yourself (use the help command for more info)
+        incident:
+          acknowledged: "%{id}: Incident acknowledged"
+          already_set: "%{id}: Incident already %{status}"
+          none: No triggered, open, or acknowledged incidents
+          none_mine: You have no triggered, open, or acknowledged incidents
+          not_found: "%{id}: Incident not found"
+          resolved: "%{id}: Incident resolved"
+          unable_to_acknowledge: "%{id}: Unable to acknowledge incident"
+          unable_to_resolve: "%{id}: Unable to resolve incident"
+        forget:
+          complete: Your email has now been forgotten.
+          unknown: No email on record for you.
