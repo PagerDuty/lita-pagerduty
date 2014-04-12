@@ -31,38 +31,38 @@ config.handlers.pagerduty.subdomain = ''
 ### Specific incidents
 
 ```
-Lita pager incidents all                - Show all open incidents
-Lita pager incidents mine               - Show all open incidents assigned to me
-Lita pager incident <incident ID>       - Show a specific incident
+pager incidents all                - Show all open incidents
+pager incidents mine               - Show all open incidents assigned to me
+pager incident <incident ID>       - Show a specific incident
 ```
 
 ### Incident notes
 
 ```
-Lita pager notes <incident ID>          - Show all notes for a specific incident
+pager notes <incident ID>          - Show all notes for a specific incident
 ```
 
 ### Acknowledging an incident
 
 ```
-Lita pager ack all                      - Acknowledge all triggered incidents
-Lita pager ack mine                     - Acknowledge all triggered incidents assigned to me
-Lita pager ack <incident ID>            - Acknowledge a specific incident
+pager ack all                      - Acknowledge all triggered incidents
+pager ack mine                     - Acknowledge all triggered incidents assigned to me
+pager ack <incident ID>            - Acknowledge a specific incident
 ```
 
 ### Resolving an incident
 
 ```
-Lita pager resolve all                  - Resolve all triggered incidents
-Lita pager resolve mine                 - Resolve all triggered incidents assigned to me
-Lita pager resolve <incident ID>        - Resolve a specific incident
+pager resolve all                  - Resolve all triggered incidents
+pager resolve mine                 - Resolve all triggered incidents assigned to me
+pager resolve <incident ID>        - Resolve a specific incident
 ```
 
 ### Misc
 
 ```
-Lita pager identify <email address>     - Associate your chat user with your email address
-Lita pager forget                       - Remove your chat user / email association
+pager identify <email address>     - Associate your chat user with your email address
+pager forget                       - Remove your chat user / email association
 ```
 
 ## License
