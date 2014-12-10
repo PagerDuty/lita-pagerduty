@@ -8,3 +8,5 @@ SimpleCov.start { add_filter '/spec/' }
 
 require 'lita-pagerduty'
 require 'lita/rspec'
+
+Lita.version_3_compatibility_mode = false

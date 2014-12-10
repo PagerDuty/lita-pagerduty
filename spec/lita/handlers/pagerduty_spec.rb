@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pagerduty'
 
 describe Lita::Handlers::Pagerduty, lita_handler: true do
   let(:no_incident) do
@@ -112,21 +111,24 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     client
   end
 
-  it { routes_command('who\'s on call').to(:whos_on_call) }
-  it { routes_command('who\'s on call?').to(:whos_on_call) }
-  it { routes_command('pager identify foobar@example.com').to(:identify) }
-  it { routes_command('pager forget').to(:forget) }
-  it { routes_command('pager incidents all').to(:incidents_all) }
-  it { routes_command('pager incidents mine').to(:incidents_mine) }
-  it { routes_command('pager incident ABC123').to(:incident) }
-  it { routes_command('pager notes ABC123').to(:notes) }
-  it { routes_command('pager note ABC123 some text').to(:note) }
-  it { routes_command('pager ack all').to(:ack_all) }
-  it { routes_command('pager ack mine').to(:ack_mine) }
-  it { routes_command('pager ack ABC123').to(:ack) }
-  it { routes_command('pager resolve all').to(:resolve_all) }
-  it { routes_command('pager resolve mine').to(:resolve_mine) }
-  it { routes_command('pager resolve ABC123').to(:resolve) }
+  it do
+    is_expected.to route_command('who\'s on call').to(:whos_on_call)
+    is_expected.to route_command('who\'s on call?').to(:whos_on_call)
+    is_expected.to route_command('pager identify foobar@example.com')
+      .to(:identify)
+    is_expected.to route_command('pager forget').to(:forget)
+    is_expected.to route_command('pager incidents all').to(:incidents_all)
+    is_expected.to route_command('pager incidents mine').to(:incidents_mine)
+    is_expected.to route_command('pager incident ABC123').to(:incident)
+    is_expected.to route_command('pager notes ABC123').to(:notes)
+    is_expected.to route_command('pager note ABC123 some text').to(:note)
+    is_expected.to route_command('pager ack all').to(:ack_all)
+    is_expected.to route_command('pager ack mine').to(:ack_mine)
+    is_expected.to route_command('pager ack ABC123').to(:ack)
+    is_expected.to route_command('pager resolve all').to(:resolve_all)
+    is_expected.to route_command('pager resolve mine').to(:resolve_mine)
+    is_expected.to route_command('pager resolve ABC123').to(:resolve)
+  end
 
   describe '.default_config' do
     it 'sets api_key to nil' do

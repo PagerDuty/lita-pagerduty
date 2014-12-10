@@ -9,3 +9,9 @@ FileName:
 
 MethodLength:
   Max: 20
+
+AbcSize:
+  Enabled: false
+
+PerceivedComplexity:
+  Enabled: false

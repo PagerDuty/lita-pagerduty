@@ -1,5 +1,4 @@
 require 'lita'
-require 'pagerduty'
 
 module Lita
   module Handlers
@@ -233,7 +232,7 @@ module Lita
             if result == "#{incident.id}: Incident acknowledged"
               completed.push(incident.id)
             end
-            response.reply("Acknowledged: #{completed.join(",")}")
+            response.reply("Acknowledged: #{completed.join(',')}")
           end
         else
           response.reply(t('incident.none'))
@@ -251,7 +250,7 @@ module Lita
               if result == "#{incident.id}: Incident acknowledged"
                 completed.push(incident.id)
               end
-              response.reply("Acknowledged: #{completed.join(",")}")
+              response.reply("Acknowledged: #{completed.join(',')}")
             end
           else
             response.reply(t('incident.none_mine'))
@@ -276,7 +275,7 @@ module Lita
             if result == "#{incident.id}: Incident resolved"
               completed.push(incident.id)
             end
-            response.reply("Resolved: #{completed.join(",")}")
+            response.reply("Resolved: #{completed.join(',')}")
           end
         else
           response.reply(t('incident.none'))
@@ -294,7 +293,7 @@ module Lita
               if result == "#{incident.id}: Incident resolved"
                 completed.push(incident.id)
               end
-              response.reply("Resolved: #{completed.join(",")}")
+              response.reply("Resolved: #{completed.join(',')}")
             end
           else
             response.reply(t('incident.none_mine'))
