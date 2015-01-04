@@ -4,19 +4,13 @@ module PagerdutyHelper
   module Incident
     def resolve_incident(incident_id)
       incident = fetch_incident(incident_id)
-      if incident != 'No results'
-        if incident.status != 'resolved'
-          results = incident.resolve
-          if results.key?('status') && results['status'] == 'resolved'
-            t('incident.resolved', id: incident_id)
-          else
-            t('incident.unable_to_resolve', id: incident_id)
-          end
-        else
-          t('incident.already_set', id: incident_id, status: incident.status)
-        end
+      return t('incident.not_found', id: incident_id) if incident == 'No results'
+      return t('incident.already_set', id: incident_id, status: incident.status) if incident.status == 'resolved'
+      results = incident.resolve
+      if results.key?('status') && results['status'] == 'resolved'
+        t('incident.resolved', id: incident_id)
       else
-        t('incident.not_found', id: incident_id)
+        t('incident.unable_to_resolve', id: incident_id)
       end
     end
 
@@ -47,20 +41,14 @@ module PagerdutyHelper
 
     def acknowledge_incident(incident_id)
       incident = fetch_incident(incident_id)
-      if incident != 'No results'
-        if incident.status != 'acknowledged' &&
-           incident.status != 'resolved'
-          results = incident.acknowledge
-          if results.key?('status') && results['status'] == 'acknowledged'
-            t('incident.acknowledged', id: incident_id)
-          else
-            t('incident.unable_to_acknowledge', id: incident_id)
-          end
-        else
-          t('incident.already_set', id: incident_id, status: incident.status)
-        end
+      return t('incident.not_found', id: incident_id) if incident == 'No results'
+      return t('incident.already_set', id: incident_id, status: incident.status) if incident.status == 'acknowledged'
+      return t('incident.already_set', id: incident_id, status: incident.status) if incident.status == 'resolved'
+      results = incident.acknowledge
+      if results.key?('status') && results['status'] == 'acknowledged'
+        t('incident.acknowledged', id: incident_id)
       else
-        t('incident.not_found', id: incident_id)
+        t('incident.unable_to_acknowledge', id: incident_id)
       end
     end
   end

@@ -2,11 +2,11 @@ FileName:
   Exclude:
     - lib/lita-pagerduty.rb
 
+LineLength:
+  Max: 130
+
 MethodLength:
   Max: 20
 
 AbcSize:
-  Enabled: false
-
-PerceivedComplexity:
   Enabled: false
