@@ -30,17 +30,11 @@ module Lita
       def notes(response)
         incident_id = response.matches[0][0]
         incident = fetch_incident(incident_id)
-        if incident != 'No results'
-          if incident.notes.notes.count > 0
-            incident.notes.notes.each do |note|
-              response.reply("#{incident_id}: #{note.content} "\
-                             "(#{note.user.email})")
-            end
-          else
-            response.reply("#{incident_id}: No notes")
-          end
-        else
-          response.reply(t('incident.not_found', id: incident_id))
+        return response.reply(t('incident.not_found', id: incident_id)) if incident == 'No results'
+        return response.reply("#{incident_id}: No notes") unless incident.notes.notes.count > 0
+        incident.notes.notes.each do |note|
+          response.reply("#{incident_id}: #{note.content} "\
+                         "(#{note.user.email})")
         end
       end
 

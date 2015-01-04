@@ -38,38 +38,25 @@ module Lita
 
       def resolve_all(response)
         incidents = fetch_all_incidents
-        if incidents.count > 0
-          completed = []
-          incidents.each do |incident|
-            result = resolve_incident(incident.id)
-            if result == "#{incident.id}: Incident resolved"
-              completed.push(incident.id)
-            end
-            response.reply("Resolved: #{completed.join(',')}")
-          end
-        else
-          response.reply(t('incident.none'))
+        return response.reply(t('incident.none')) unless incidents.count > 0
+        completed = []
+        incidents.each do |incident|
+          result = resolve_incident(incident.id)
+          completed.push(incident.id) if result == "#{incident.id}: Incident resolved"
+          response.reply("Resolved: #{completed.join(',')}")
         end
       end
 
       def resolve_mine(response)
         email = redis.get("email_#{response.user.id}")
-        if email
-          incidents = fetch_my_incidents(email)
-          if incidents.count > 0
-            completed = []
-            incidents.each do |incident|
-              result = resolve_incident(incident.id)
-              if result == "#{incident.id}: Incident resolved"
-                completed.push(incident.id)
-              end
-              response.reply("Resolved: #{completed.join(',')}")
-            end
-          else
-            response.reply(t('incident.none_mine'))
-          end
-        else
-          response.reply(t('identify.missing'))
+        return response.reply(t('identify.missing')) unless email
+        incidents = fetch_my_incidents(email)
+        return response.reply(t('incident.none_mine')) unless incidents.count > 0
+        completed = []
+        incidents.each do |incident|
+          result = resolve_incident(incident.id)
+          completed.push(incident.id) if result == "#{incident.id}: Incident resolved"
+          response.reply("Resolved: #{completed.join(',')}")
         end
       end
 

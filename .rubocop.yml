@@ -5,8 +5,5 @@ FileName:
 LineLength:
   Max: 130
 
-MethodLength:
-  Max: 20
-
 AbcSize:
   Enabled: false

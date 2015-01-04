@@ -38,45 +38,33 @@ module Lita
 
       def incidents_all(response)
         incidents = fetch_all_incidents
-        if incidents.count > 0
-          incidents.each do |incident|
-            response.reply("#{incident.id}: " \
-                           "\"#{incident.trigger_summary_data.subject}\", " \
-                           "assigned to: #{incident.assigned_to_user.email}")
-          end
-        else
-          response.reply(t('incident.none'))
+        return response.reply(t('incident.none')) unless incidents.count > 0
+        incidents.each do |incident|
+          response.reply("#{incident.id}: " \
+                         "\"#{incident.trigger_summary_data.subject}\", " \
+                         "assigned to: #{incident.assigned_to_user.email}")
         end
       end
 
       def incidents_mine(response)
         email = redis.get("email_#{response.user.id}")
-        if email
-          incidents = fetch_my_incidents(email)
-          if incidents.count > 0
-            incidents.each do |incident|
-              response.reply("#{incident.id}: " \
-                             "\"#{incident.trigger_summary_data.subject}\", " \
-                             "assigned to: #{incident.assigned_to_user.email}")
-            end
-          else
-            response.reply(t('incident.none_mine'))
-          end
-        else
-          response.reply(t('identify.missing'))
+        return response.reply(t('identify.missing')) unless email
+        incidents = fetch_my_incidents(email)
+        response.reply(t('incident.none_mine')) unless incidents.count > 0
+        incidents.each do |incident|
+          response.reply("#{incident.id}: " \
+                         "\"#{incident.trigger_summary_data.subject}\", " \
+                         "assigned to: #{incident.assigned_to_user.email}")
         end
       end
 
       def incident(response)
         incident_id = response.matches[0][0]
         incident = fetch_incident(incident_id)
-        if incident != 'No results'
-          response.reply("#{incident_id}: " \
-                         "\"#{incident.trigger_summary_data.subject}\", " \
-                         "assigned to: #{incident.assigned_to_user.email}")
-        else
-          response.reply(t('incident.not_found', id: incident_id))
-        end
+        return response.reply(t('incident.not_found', id: incident_id)) if incident == 'No results'
+        response.reply("#{incident_id}: " \
+                       "\"#{incident.trigger_summary_data.subject}\", " \
+                       "assigned to: #{incident.assigned_to_user.email}")
       end
     end
 

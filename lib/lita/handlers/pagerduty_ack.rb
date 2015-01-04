@@ -38,38 +38,25 @@ module Lita
 
       def ack_all(response)
         incidents = fetch_all_incidents
-        if incidents.count > 0
-          completed = []
-          incidents.each do |incident|
-            result = acknowledge_incident(incident.id)
-            if result == "#{incident.id}: Incident acknowledged"
-              completed.push(incident.id)
-            end
-            response.reply("Acknowledged: #{completed.join(',')}")
-          end
-        else
-          response.reply(t('incident.none'))
+        return response.reply(t('incident.none')) unless incidents.count > 0
+        completed = []
+        incidents.each do |incident|
+          result = acknowledge_incident(incident.id)
+          completed.push(incident.id) if result == "#{incident.id}: Incident acknowledged"
+          response.reply("Acknowledged: #{completed.join(',')}")
         end
       end
 
       def ack_mine(response)
         email = redis.get("email_#{response.user.id}")
-        if email
-          incidents = fetch_my_incidents(email)
-          if incidents.count > 0
-            completed = []
-            incidents.each do |incident|
-              result = acknowledge_incident(incident.id)
-              if result == "#{incident.id}: Incident acknowledged"
-                completed.push(incident.id)
-              end
-              response.reply("Acknowledged: #{completed.join(',')}")
-            end
-          else
-            response.reply(t('incident.none_mine'))
-          end
-        else
-          response.reply(t('identify.missing'))
+        return response.reply(t('identify.missing')) unless email
+        incidents = fetch_my_incidents(email)
+        return response.reply(t('incident.none_mine')) unless incidents.count > 0
+        completed = []
+        incidents.each do |incident|
+          result = acknowledge_incident(incident.id)
+          completed.push(incident.id) if result == "#{incident.id}: Incident acknowledged"
+          response.reply("Acknowledged: #{completed.join(',')}")
         end
       end
 
