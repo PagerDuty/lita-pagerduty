@@ -4,6 +4,9 @@ module Lita
   module Handlers
     # Utility-ish routes
     class PagerdutyUtility < Handler
+      config :api_key, required: true
+      config :subdomain, required: true
+
       namespace 'Pagerduty'
 
       include ::PagerdutyHelper::Incident
@@ -35,11 +38,6 @@ module Lita
           t('help.forget.syntax') => t('help.forget.desc')
         }
       )
-
-      def self.default_config(config)
-        config.api_key = nil
-        config.subdomain = nil
-      end
 
       def whos_on_call(response)
         response.reply(t('error.not_implemented'))
