@@ -7,10 +7,11 @@ module Lita
       namespace 'Pagerduty'
 
       include ::PagerdutyHelper::Incident
+      include ::PagerdutyHelper::Regex
       include ::PagerdutyHelper::Utility
 
       route(
-        /^pager\snotes\s(\w+)$/,
+        /^pager\snotes\s#{INCIDENT_ID_PATTERN}$/,
         :notes,
         command: true,
         help: {
@@ -19,7 +20,7 @@ module Lita
       )
 
       route(
-        /^pager\snote\s(\w+)\s(.+)$/,
+        /^pager\snote\s#{INCIDENT_ID_PATTERN}\s(.+)$/,
         :note,
         command: true,
         help: {
@@ -28,7 +29,7 @@ module Lita
       )
 
       def notes(response)
-        incident_id = response.matches[0][0]
+        incident_id = response.match_data['incident_id']
         incident = fetch_incident(incident_id)
         return response.reply(t('incident.not_found', id: incident_id)) if incident == 'No results'
         return response.reply("#{incident_id}: No notes") unless incident.notes.notes.count > 0

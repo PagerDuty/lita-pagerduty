@@ -7,6 +7,7 @@ module Lita
       namespace 'Pagerduty'
 
       include ::PagerdutyHelper::Incident
+      include ::PagerdutyHelper::Regex
       include ::PagerdutyHelper::Utility
 
       route(
@@ -28,7 +29,7 @@ module Lita
       )
 
       route(
-        /^pager\sack\s(\w+)$/,
+        /^pager\sack\s#{INCIDENT_ID_PATTERN}$/,
         :ack,
         command: true,
         help: {
@@ -61,7 +62,7 @@ module Lita
       end
 
       def ack(response)
-        incident_id = response.matches[0][0]
+        incident_id = response.match_data['incident_id']
         return if incident_id == 'all' || incident_id == 'mine'
         response.reply(acknowledge_incident(incident_id))
       end

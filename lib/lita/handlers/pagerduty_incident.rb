@@ -7,6 +7,7 @@ module Lita
       namespace 'Pagerduty'
 
       include ::PagerdutyHelper::Incident
+      include ::PagerdutyHelper::Regex
       include ::PagerdutyHelper::Utility
 
       route(
@@ -28,7 +29,7 @@ module Lita
       )
 
       route(
-        /^pager\sincident\s(\w+)$/,
+        /^pager\sincident\s#{INCIDENT_ID_PATTERN}$/,
         :incident,
         command: true,
         help: {
@@ -55,7 +56,7 @@ module Lita
       end
 
       def incident(response)
-        incident_id = response.matches[0][0]
+        incident_id = response.match_data['incident_id']
         incident = fetch_incident(incident_id)
         return response.reply(t('incident.not_found', id: incident_id)) if incident == 'No results'
         response.reply(format_incident(incident))
