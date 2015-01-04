@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Lita::Handlers::Pagerduty, lita_handler: true do
+describe Lita::Handlers::PagerdutyUtility, lita_handler: true do
   let(:no_incident) do
     client = double
     expect(client).to receive(:get_incident) { 'No results' }
@@ -117,17 +117,6 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     is_expected.to route_command('pager identify foobar@example.com')
       .to(:identify)
     is_expected.to route_command('pager forget').to(:forget)
-    is_expected.to route_command('pager incidents all').to(:incidents_all)
-    is_expected.to route_command('pager incidents mine').to(:incidents_mine)
-    is_expected.to route_command('pager incident ABC123').to(:incident)
-    is_expected.to route_command('pager notes ABC123').to(:notes)
-    is_expected.to route_command('pager note ABC123 some text').to(:note)
-    is_expected.to route_command('pager ack all').to(:ack_all)
-    is_expected.to route_command('pager ack mine').to(:ack_mine)
-    is_expected.to route_command('pager ack ABC123').to(:ack)
-    is_expected.to route_command('pager resolve all').to(:resolve_all)
-    is_expected.to route_command('pager resolve mine').to(:resolve_mine)
-    is_expected.to route_command('pager resolve ABC123').to(:resolve)
   end
 
   describe '.default_config' do

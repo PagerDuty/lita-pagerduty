@@ -1,6 +1,3 @@
-ClassLength:
-  Max: 317
-
 FileName:
   Exclude:
     - lib/lita-pagerduty.rb
