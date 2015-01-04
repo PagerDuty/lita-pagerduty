@@ -1,11 +1,9 @@
 ClassLength:
-  Max: 400
-
-Documentation:
-  Enabled: false
+  Max: 317
 
 FileName:
-  Enabled: false
+  Exclude:
+    - lib/lita-pagerduty.rb
 
 MethodLength:
   Max: 20

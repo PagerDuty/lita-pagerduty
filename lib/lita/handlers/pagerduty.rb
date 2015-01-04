@@ -1,8 +1,12 @@
-require 'lita'
-
+# Lita-related code
 module Lita
+  # Plugin-related code
   module Handlers
+    # Main routes
     class Pagerduty < Handler
+      include ::PagerdutyHelper::Incident
+      include ::PagerdutyHelper::Utility
+
       route(
         /^who\'s\son\scall\?*$/,
         :whos_on_call,
@@ -307,80 +311,6 @@ module Lita
         incident_id = response.matches[0][0]
         return if incident_id == 'all' || incident_id == 'mine'
         response.reply(resolve_incident(incident_id))
-      end
-
-      private
-
-      def pd_client
-        if Lita.config.handlers.pagerduty.api_key.nil? ||
-           Lita.config.handlers.pagerduty.subdomain.nil?
-          fail 'Bad config'
-        end
-
-        ::Pagerduty.new(token: Lita.config.handlers.pagerduty.api_key,
-                        subdomain: Lita.config.handlers.pagerduty.subdomain)
-      end
-
-      def fetch_all_incidents
-        client = pd_client
-        list = []
-        # FIXME: Workaround on current PD Gem
-        client.incidents.incidents.each do |incident|
-          list.push(incident) if incident.status != 'resolved'
-        end
-        list
-      end
-
-      def fetch_my_incidents(email)
-        # FIXME: Workaround
-        incidents = fetch_all_incidents
-        list = []
-        incidents.each do |incident|
-          list.push(incident) if incident.assigned_to_user.email == email
-        end
-        list
-      end
-
-      def fetch_incident(incident_id)
-        client = pd_client
-        client.get_incident(id: incident_id)
-      end
-
-      def acknowledge_incident(incident_id)
-        incident = fetch_incident(incident_id)
-        if incident != 'No results'
-          if incident.status != 'acknowledged' &&
-             incident.status != 'resolved'
-            results = incident.acknowledge
-            if results.key?('status') && results['status'] == 'acknowledged'
-              t('incident.acknowledged', id: incident_id)
-            else
-              t('incident.unable_to_acknowledge', id: incident_id)
-            end
-          else
-            t('incident.already_set', id: incident_id, status: incident.status)
-          end
-        else
-          t('incident.not_found', id: incident_id)
-        end
-      end
-
-      def resolve_incident(incident_id)
-        incident = fetch_incident(incident_id)
-        if incident != 'No results'
-          if incident.status != 'resolved'
-            results = incident.resolve
-            if results.key?('status') && results['status'] == 'resolved'
-              t('incident.resolved', id: incident_id)
-            else
-              t('incident.unable_to_resolve', id: incident_id)
-            end
-          else
-            t('incident.already_set', id: incident_id, status: incident.status)
-          end
-        else
-          t('incident.not_found', id: incident_id)
-        end
       end
     end
 
