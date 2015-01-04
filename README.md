@@ -1,13 +1,13 @@
 # lita-pagerduty
 
-[![Build Status](https://img.shields.io/travis/esigler/lita-pagerduty/master.svg)](https://travis-ci.org/esigler/lita-pagerduty)
+[![Build Status](https://img.shields.io/travis/pagerduty/lita-pagerduty/master.svg)](https://travis-ci.org/pagerduty/lita-pagerduty)
 [![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://tldrlegal.com/license/mit-license)
 [![RubyGems :: RMuh Gem Version](http://img.shields.io/gem/v/lita-pagerduty.svg)](https://rubygems.org/gems/lita-pagerduty)
-[![Coveralls Coverage](https://img.shields.io/coveralls/esigler/lita-pagerduty/master.svg)](https://coveralls.io/r/esigler/lita-pagerduty)
-[![Code Climate](https://img.shields.io/codeclimate/github/esigler/lita-pagerduty.svg)](https://codeclimate.com/github/esigler/lita-pagerduty)
-[![Gemnasium](https://img.shields.io/gemnasium/esigler/lita-pagerduty.svg)](https://gemnasium.com/esigler/lita-pagerduty)
+[![Coveralls Coverage](https://img.shields.io/coveralls/pagerduty/lita-pagerduty/master.svg)](https://coveralls.io/r/pagerduty/lita-pagerduty)
+[![Code Climate](https://img.shields.io/codeclimate/github/pagerduty/lita-pagerduty.svg)](https://codeclimate.com/github/pagerduty/lita-pagerduty)
+[![Gemnasium](https://img.shields.io/gemnasium/pagerduty/lita-pagerduty.svg)](https://gemnasium.com/pagerduty/lita-pagerduty)
 
-PagerDuty (http://pagerduty.com) handler for checking who's on call, scheduling, ack, resolve, etc.
+A [PagerDuty](http://pagerduty.com) plugin for [Lita](https://github.com/jimmycuadra/lita).
 
 ## Installation
 
