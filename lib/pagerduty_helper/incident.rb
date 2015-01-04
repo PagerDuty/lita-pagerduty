@@ -2,6 +2,12 @@
 module PagerdutyHelper
   # Incident-related functions
   module Incident
+    def format_incident(incident)
+      t('incident.info', id: incident.id,
+                         subject: incident.trigger_summary_data.subject,
+                         assigned: incident.assigned_to_user.email)
+    end
+
     def resolve_incident(incident_id)
       incident = fetch_incident(incident_id)
       return t('incident.not_found', id: incident_id) if incident == 'No results'

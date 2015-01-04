@@ -60,6 +60,12 @@ en:
           resolved: "%{id}: Incident resolved"
           unable_to_acknowledge: "%{id}: Unable to acknowledge incident"
           unable_to_resolve: "%{id}: Unable to resolve incident"
+          info: "%{id}: \"%{subject}\", assigned to: %{assigned}"
         forget:
           complete: Your email has now been forgotten.
           unknown: No email on record for you.
+        all:
+          acknowledged: "Acknowledged: %{list}"
+          resolved: "Resolved: %{list}"
+        note:
+          show: "%{id}: %{content} (%{email})"

@@ -43,7 +43,7 @@ module Lita
         incidents.each do |incident|
           result = resolve_incident(incident.id)
           completed.push(incident.id) if result == "#{incident.id}: Incident resolved"
-          response.reply("Resolved: #{completed.join(',')}")
+          response.reply(t('all.resolved', list: completed.join(',')))
         end
       end
 
@@ -56,7 +56,7 @@ module Lita
         incidents.each do |incident|
           result = resolve_incident(incident.id)
           completed.push(incident.id) if result == "#{incident.id}: Incident resolved"
-          response.reply("Resolved: #{completed.join(',')}")
+          response.reply(t('all.resolved', list: completed.join(',')))
         end
       end
 

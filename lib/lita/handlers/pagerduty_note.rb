@@ -33,8 +33,7 @@ module Lita
         return response.reply(t('incident.not_found', id: incident_id)) if incident == 'No results'
         return response.reply("#{incident_id}: No notes") unless incident.notes.notes.count > 0
         incident.notes.notes.each do |note|
-          response.reply("#{incident_id}: #{note.content} "\
-                         "(#{note.user.email})")
+          response.reply(format_note(incident, note))
         end
       end
 

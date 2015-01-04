@@ -54,6 +54,7 @@ describe Lita::Handlers::PagerdutyUtility, lita_handler: true do
     client = double
     expect(client).to receive(:get_incident) do
       double(
+        id: 'ABC123',
         status: 'triggered',
         trigger_summary_data: double(subject: 'something broke'),
         assigned_to_user: double(email: 'foo@example.com'),
@@ -99,6 +100,7 @@ describe Lita::Handlers::PagerdutyUtility, lita_handler: true do
     client = double
     expect(client).to receive(:get_incident) do
       double(
+        id: 'ABC123',
         status: 'resolved',
         trigger_summary_data: double(subject: 'something broke'),
         assigned_to_user: double(email: 'foo@example.com'),

@@ -43,7 +43,7 @@ module Lita
         incidents.each do |incident|
           result = acknowledge_incident(incident.id)
           completed.push(incident.id) if result == "#{incident.id}: Incident acknowledged"
-          response.reply("Acknowledged: #{completed.join(',')}")
+          response.reply(t('all.acknowledged', list: completed.join(', ')))
         end
       end
 
@@ -56,7 +56,7 @@ module Lita
         incidents.each do |incident|
           result = acknowledge_incident(incident.id)
           completed.push(incident.id) if result == "#{incident.id}: Incident acknowledged"
-          response.reply("Acknowledged: #{completed.join(',')}")
+          response.reply(t('all.acknowledged', list: completed.join(', ')))
         end
       end
 

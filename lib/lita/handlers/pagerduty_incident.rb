@@ -40,9 +40,7 @@ module Lita
         incidents = fetch_all_incidents
         return response.reply(t('incident.none')) unless incidents.count > 0
         incidents.each do |incident|
-          response.reply("#{incident.id}: " \
-                         "\"#{incident.trigger_summary_data.subject}\", " \
-                         "assigned to: #{incident.assigned_to_user.email}")
+          response.reply(format_incident(incident))
         end
       end
 
@@ -52,9 +50,7 @@ module Lita
         incidents = fetch_my_incidents(email)
         response.reply(t('incident.none_mine')) unless incidents.count > 0
         incidents.each do |incident|
-          response.reply("#{incident.id}: " \
-                         "\"#{incident.trigger_summary_data.subject}\", " \
-                         "assigned to: #{incident.assigned_to_user.email}")
+          response.reply(format_incident(incident))
         end
       end
 
@@ -62,9 +58,7 @@ module Lita
         incident_id = response.matches[0][0]
         incident = fetch_incident(incident_id)
         return response.reply(t('incident.not_found', id: incident_id)) if incident == 'No results'
-        response.reply("#{incident_id}: " \
-                       "\"#{incident.trigger_summary_data.subject}\", " \
-                       "assigned to: #{incident.assigned_to_user.email}")
+        response.reply(format_incident(incident))
       end
     end
 
