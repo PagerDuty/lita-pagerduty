@@ -49,7 +49,7 @@ module Lita
       end
 
       def ack_mine(response)
-        email = redis.get("email_#{response.user.id}")
+        email = fetch_user(response.user)
         return response.reply(t('identify.missing')) unless email
         incidents = fetch_my_incidents(email)
         return response.reply(t('incident.none_mine')) unless incidents.count > 0

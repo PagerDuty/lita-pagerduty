@@ -10,6 +10,7 @@ module Lita
       namespace 'Pagerduty'
 
       include ::PagerdutyHelper::Incident
+      include ::PagerdutyHelper::Regex
       include ::PagerdutyHelper::Utility
 
       route(
@@ -22,7 +23,7 @@ module Lita
       )
 
       route(
-        /^pager\sidentify\s(.+)$/,
+        /^pager\sidentify\s#{EMAIL_PATTERN}$/,
         :identify,
         command: true,
         help: {
@@ -44,24 +45,18 @@ module Lita
       end
 
       def identify(response)
-        email = response.matches[0][0]
-        stored_email = redis.get("email_#{response.user.id}")
-        if !stored_email
-          redis.set("email_#{response.user.id}", email)
-          response.reply(t('identify.complete'))
-        else
-          response.reply(t('identify.already'))
-        end
+        email = response.match_data['email']
+        stored_email = fetch_user(response.user)
+        return response.reply(t('identify.already')) if stored_email
+        store_user(response.user, email)
+        response.reply(t('identify.complete'))
       end
 
       def forget(response)
-        stored_email = redis.get("email_#{response.user.id}")
-        if stored_email
-          redis.del("email_#{response.user.id}")
-          response.reply(t('forget.complete'))
-        else
-          response.reply(t('forget.unknown'))
-        end
+        stored_email = fetch_user(response.user)
+        return response.reply(t('forget.unknown')) unless stored_email
+        delete_user(response.user)
+        response.reply(t('forget.complete'))
       end
     end
 

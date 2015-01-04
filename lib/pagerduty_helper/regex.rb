@@ -3,5 +3,6 @@ module PagerdutyHelper
   # Utility functions
   module Regex
     INCIDENT_ID_PATTERN = /(?<incident_id>[a-zA-Z0-9+]{1,6})/
+    EMAIL_PATTERN       = /(?<email>[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+)/i
   end
 end
