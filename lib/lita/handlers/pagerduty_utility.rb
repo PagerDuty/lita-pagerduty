@@ -53,7 +53,12 @@ module Lita
 
       def on_call_list(response)
         schedules = pd_client.get_schedules.schedules
-        response.reply("Available schedules: #{schedules.map(&:name).join(', ')}")
+        if schedules.any?
+          schedule_list = schedules.map(&:name).join(', ')
+          response.reply(t('on_call_list.response', schedules: schedule_list))
+        else
+          response.reply(t('on_call_list.no_schedules_found'))
+        end
       end
 
       def on_call_lookup(response)
@@ -61,20 +66,13 @@ module Lita
         schedule = pd_client.get_schedules.schedules.find { |s| s.name == schedule_name }
 
         unless schedule
-          return response.reply("No matching schedule found for '#{schedule_name}'")
+          return response.reply(t('on_call_lookup.no_matching_schedule', schedule_name: schedule_name))
         end
 
-        now = Time.now.utc
-        user = pd_client.get_schedule_users(
-          id: schedule.id,
-          since: now.iso8601,
-          until: (now + 3600).iso8601
-        ).first
-
-        if user
-          response.reply("#{user.name} (#{user.email}) is currently on call for #{schedule_name}")
+        if (user = lookup_on_call_user(schedule.id))
+          response.reply(t('on_call_lookup.response', name: user.name, email: user.email, schedule_name: schedule_name))
         else
-          response.reply("No one is currently on call for #{schedule_name}")
+          response.reply(t('on_call_lookup.no_one_on_call', schedule_name: schedule_name))
         end
       end
 
@@ -91,6 +89,17 @@ module Lita
         return response.reply(t('forget.unknown')) unless stored_email
         delete_user(response.user)
         response.reply(t('forget.complete'))
+      end
+
+      private
+
+      def lookup_on_call_user(schedule_id)
+        now = Time.now.utc
+        pd_client.get_schedule_users(
+          id: schedule_id,
+          since: now.iso8601,
+          until: (now + 3600).iso8601
+        ).first
       end
     end
 
