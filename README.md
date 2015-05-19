@@ -58,6 +58,13 @@ pager resolve mine                 - Resolve all triggered incidents assigned to
 pager resolve <incident ID>        - Resolve a specific incident
 ```
 
+### Schedules
+
+```
+pager oncall - List available schedules
+pager oncall <schedule> - Show who is on call for the given schedule
+```
+
 ### Misc
 
 ```
