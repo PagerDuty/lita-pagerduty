@@ -20,3 +20,117 @@ RSpec.configure do |config|
     registry.register_handler(Lita::Handlers::PagerdutyUtility)
   end
 end
+
+RSpec.shared_context 'basic fixtures' do
+  let(:no_incident) do
+    client = double
+    expect(client).to receive(:get_incident) { 'No results' }
+    client
+  end
+
+  let(:no_incidents) do
+    client = double
+    expect(client).to receive(:incidents) do
+      double(
+        incidents: []
+      )
+    end
+    client
+  end
+
+  let(:incidents) do
+    client = double
+    expect(client).to receive(:incidents) do
+      double(
+        incidents: [
+          double(
+            id: 'ABC123',
+            status: 'resolved',
+            trigger_summary_data: double(subject: 'something broke'),
+            assigned_to_user: double(email: 'foo@example.com')
+          ),
+          double(
+            id: 'ABC789',
+            status: 'triggered',
+            trigger_summary_data: double(subject: 'Still broke'),
+            assigned_to_user: double(email: 'bar@example.com')
+          )
+        ]
+      )
+    end
+    allow(client).to receive(:get_incident) do
+      double(
+        status: 'triggered',
+        trigger_summary_data: double(subject: 'Still broke'),
+        assigned_to_user: double(email: 'bar@example.com'),
+        acknowledge: { 'id' => 'ABC789', 'status' => 'acknowledged' },
+        resolve: { 'id' => 'ABC789', 'status' => 'resolved' },
+        notes: double(notes: [])
+      )
+    end
+    client
+  end
+
+  let(:new_incident) do
+    client = double
+    expect(client).to receive(:get_incident) do
+      double(
+        id: 'ABC123',
+        status: 'triggered',
+        trigger_summary_data: double(subject: 'something broke'),
+        assigned_to_user: double(email: 'foo@example.com'),
+        acknowledge: { 'id' => 'ABC123', 'status' => 'acknowledged' },
+        resolve: { 'id' => 'ABC123', 'status' => 'resolved' },
+        notes: double(notes: [])
+      )
+    end
+    client
+  end
+
+  let(:acknowledged_incident) do
+    client = double
+    expect(client).to receive(:get_incident) do
+      double(
+        status: 'acknowledged',
+        trigger_summary_data: double(subject: 'something broke'),
+        assigned_to_user: double(email: 'foo@example.com'),
+        acknowledge: { 'error' =>
+          { 'message' => 'Incident Already Acknowledged', 'code' => 1002 }
+        },
+        resolve:  { 'id' => 'ABC123', 'status' => 'resolved' },
+        notes: double(notes: [])
+      )
+    end
+    client
+  end
+
+  let(:resolved_incident) do
+    client = double
+    expect(client).to receive(:get_incident) do
+      double(
+        status: 'resolved',
+        trigger_summary_data: double(subject: 'something broke'),
+        assigned_to_user: double(email: 'foo@example.com'),
+        notes: double(notes: [])
+      )
+    end
+    client
+  end
+
+  let(:incident_with_notes) do
+    client = double
+    expect(client).to receive(:get_incident) do
+      double(
+        id: 'ABC123',
+        status: 'resolved',
+        trigger_summary_data: double(subject: 'something broke'),
+        assigned_to_user: double(email: 'foo@example.com'),
+        notes: double(
+          notes: [double(content: 'Hi!',
+                         user: double(email: 'foo@example.com'))]
+        )
+      )
+    end
+    client
+  end
+end
