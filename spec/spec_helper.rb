@@ -117,6 +117,29 @@ RSpec.shared_context 'basic fixtures' do
     client
   end
 
+  let(:unable_to_resolve_incident) do
+    client = double
+    expect(client).to receive(:get_incident) do
+      double(
+        status: 'notresolved',
+        resolve:  { 'id' => 'ABC123', 'status' => 'notresolved' }
+      )
+    end
+    client
+  end
+
+  let(:unable_to_ack_incident) do
+    client = double
+    expect(client).to receive(:get_incident) do
+      double(
+        status: 'notacked',
+        acknowledge: { 'error' => {} },
+        resolve:  { 'id' => 'ABC123', 'status' => 'notacked' }
+      )
+    end
+    client
+  end
+
   let(:incident_with_notes) do
     client = double
     expect(client).to receive(:get_incident) do

@@ -83,5 +83,13 @@ describe Lita::Handlers::PagerdutyAck, lita_handler: true do
         expect(replies.last).to eq('ABC123: Incident not found')
       end
     end
+
+    describe 'when the incident cannot be acknowledged' do
+      it 'shows that its unable to acknowledge' do
+        expect(Pagerduty).to receive(:new) { unable_to_ack_incident }
+        send_command('pager ack ABC123')
+        expect(replies.last).to eq('ABC123: Unable to acknowledge incident')
+      end
+    end
   end
 end

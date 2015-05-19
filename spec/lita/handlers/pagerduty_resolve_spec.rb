@@ -83,5 +83,13 @@ describe Lita::Handlers::PagerdutyResolve, lita_handler: true do
         expect(replies.last).to eq('ABC123: Incident not found')
       end
     end
+
+    describe 'when the incident cannot be resolved' do
+      it 'shows an error' do
+        expect(Pagerduty).to receive(:new) { unable_to_resolve_incident }
+        send_command('pager resolve ABC123')
+        expect(replies.last).to eq('ABC123: Unable to resolve incident')
+      end
+    end
   end
 end
