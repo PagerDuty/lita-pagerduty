@@ -1,3 +1,5 @@
+require 'time'
+
 # Lita-related code
 module Lita
   # Plugin-related code
@@ -14,11 +16,20 @@ module Lita
       include ::PagerdutyHelper::Utility
 
       route(
-        /^who\'s\son\scall\?*$/,
-        :whos_on_call,
+        /^pager\soncall$/,
+        :on_call_list,
         command: true,
         help: {
-          t('help.whos_on_call.syntax') => t('help.whos_on_call.desc')
+          t('help.on_call_list.syntax') => t('help.on_call_list.desc')
+        }
+      )
+
+      route(
+        /^pager\soncall\s(.*)$/,
+        :on_call_lookup,
+        command: true,
+        help: {
+          t('help.on_call_lookup.syntax') => t('help.on_call_lookup.desc')
         }
       )
 
@@ -40,8 +51,29 @@ module Lita
         }
       )
 
-      def whos_on_call(response)
-        response.reply(t('error.not_implemented'))
+      def on_call_list(response)
+        schedules = pd_client.get_schedules.schedules
+        if schedules.any?
+          schedule_list = schedules.map(&:name).join(', ')
+          response.reply(t('on_call_list.response', schedules: schedule_list))
+        else
+          response.reply(t('on_call_list.no_schedules_found'))
+        end
+      end
+
+      def on_call_lookup(response)
+        schedule_name = response.match_data[1].strip
+        schedule = pd_client.get_schedules.schedules.find { |s| s.name == schedule_name }
+
+        unless schedule
+          return response.reply(t('on_call_lookup.no_matching_schedule', schedule_name: schedule_name))
+        end
+
+        if (user = lookup_on_call_user(schedule.id))
+          response.reply(t('on_call_lookup.response', name: user.name, email: user.email, schedule_name: schedule_name))
+        else
+          response.reply(t('on_call_lookup.no_one_on_call', schedule_name: schedule_name))
+        end
       end
 
       def identify(response)
@@ -57,6 +89,17 @@ module Lita
         return response.reply(t('forget.unknown')) unless stored_email
         delete_user(response.user)
         response.reply(t('forget.complete'))
+      end
+
+      private
+
+      def lookup_on_call_user(schedule_id)
+        now = Time.now.utc
+        pd_client.get_schedule_users(
+          id: schedule_id,
+          since: now.iso8601,
+          until: (now + 3600).iso8601
+        ).first
       end
     end
 

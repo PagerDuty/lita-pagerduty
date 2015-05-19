@@ -44,6 +44,12 @@ en:
           resolve_mine:
             syntax: pager resolve mine
             desc: Resolve all triggered incidents assigned to me
+          on_call_list:
+            syntax: pager oncall
+            desc: List available schedules
+          on_call_lookup:
+            syntax: pager oncall <schedule>
+            desc: Show who is on call for the given schedule
           whos_on_call:
             syntax: who's on call?
             desc: Show everyone currently on call (not implemented yet)
@@ -69,3 +75,10 @@ en:
           resolved: "Resolved: %{list}"
         note:
           show: "%{id}: %{content} (%{email})"
+        on_call_list:
+          response: "Available schedules: %{schedules}"
+          no_schedules_found: "No schedules found"
+        on_call_lookup:
+          response: "%{name} (%{email}) is currently on call for %{schedule_name}"
+          no_matching_schedule: "No matching schedules found for '%{schedule_name}'" 
+          no_one_on_call: "No one is currently on call for %{schedule_name}"

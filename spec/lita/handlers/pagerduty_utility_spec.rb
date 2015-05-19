@@ -114,23 +114,15 @@ describe Lita::Handlers::PagerdutyUtility, lita_handler: true do
   end
 
   it do
-    is_expected.to route_command('who\'s on call').to(:whos_on_call)
-    is_expected.to route_command('who\'s on call?').to(:whos_on_call)
-    is_expected.to route_command('pager identify foobar@example.com')
-      .to(:identify)
+    is_expected.to route_command('pager oncall').to(:on_call_list)
+    is_expected.to route_command('pager oncall ops').to(:on_call_lookup)
+    is_expected.to route_command('pager identify foobar@example.com').to(:identify)
     is_expected.to route_command('pager forget').to(:forget)
   end
 
   before do
     Lita.config.handlers.pagerduty.api_key = 'foo'
     Lita.config.handlers.pagerduty.subdomain = 'bar'
-  end
-
-  describe '#whos_on_call' do
-    it 'shows a warning' do
-      send_command("who's on call?")
-      expect(replies.last).to eq('Not implemented yet.')
-    end
   end
 
   describe '#identify' do
