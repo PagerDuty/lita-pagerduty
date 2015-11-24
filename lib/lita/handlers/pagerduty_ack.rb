@@ -37,6 +37,7 @@ module Lita
         }
       )
 
+      # rubocop:disable Metrics/AbcSize
       def ack_all(response)
         incidents = fetch_all_incidents
         return response.reply(t('incident.none')) unless incidents.count > 0
@@ -47,7 +48,9 @@ module Lita
           response.reply(t('all.acknowledged', list: completed.join(', ')))
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
+      # rubocop:disable Metrics/AbcSize
       def ack_mine(response)
         email = fetch_user(response.user)
         return response.reply(t('identify.missing')) unless email
@@ -60,6 +63,7 @@ module Lita
           response.reply(t('all.acknowledged', list: completed.join(', ')))
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       def ack(response)
         incident_id = response.match_data['incident_id']

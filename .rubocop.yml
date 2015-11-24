@@ -4,6 +4,3 @@ FileName:
 
 LineLength:
   Max: 130
-
-AbcSize:
-  Enabled: false

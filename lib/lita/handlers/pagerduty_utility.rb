@@ -61,6 +61,7 @@ module Lita
         end
       end
 
+      # rubocop:disable Metrics/AbcSize
       def on_call_lookup(response)
         schedule_name = response.match_data[1].strip
         schedule = pd_client.get_schedules.schedules.find { |s| s.name == schedule_name }
@@ -75,6 +76,7 @@ module Lita
           response.reply(t('on_call_lookup.no_one_on_call', schedule_name: schedule_name))
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       def identify(response)
         email = response.match_data['email']
