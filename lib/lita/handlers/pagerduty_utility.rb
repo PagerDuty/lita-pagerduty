@@ -63,7 +63,7 @@ module Lita
 
       def on_call_lookup(response)
         schedule_name = response.match_data[1].strip
-        schedule = pd_client.get_schedules.schedules.find { |s| s.name == schedule_name }
+        schedule = pd_client.get_schedules.schedules.find { |s| s.casecmp(schedule_name) == 0 }
 
         unless schedule
           return response.reply(t('on_call_lookup.no_matching_schedule', schedule_name: schedule_name))
