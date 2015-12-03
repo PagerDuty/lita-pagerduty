@@ -28,6 +28,7 @@ module Lita
         }
       )
 
+      # rubocop:disable Metrics/AbcSize
       def notes(response)
         incident_id = response.match_data['incident_id']
         incident = fetch_incident(incident_id)
@@ -37,6 +38,7 @@ module Lita
           response.reply(format_note(incident, note))
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       def note(response)
         response.reply(t('error.not_implemented'))

@@ -15,3 +15,23 @@ require 'lita/handlers/pagerduty_incident'
 require 'lita/handlers/pagerduty_note'
 require 'lita/handlers/pagerduty_resolve'
 require 'lita/handlers/pagerduty_utility'
+
+Lita::Handlers::PagerdutyAck.template_root File.expand_path(
+  File.join('..', '..', 'templates'), __FILE__
+)
+
+Lita::Handlers::PagerdutyIncident.template_root File.expand_path(
+  File.join('..', '..', 'templates'), __FILE__
+)
+
+Lita::Handlers::PagerdutyNote.template_root File.expand_path(
+  File.join('..', '..', 'templates'), __FILE__
+)
+
+Lita::Handlers::PagerdutyResolve.template_root File.expand_path(
+  File.join('..', '..', 'templates'), __FILE__
+)
+
+Lita::Handlers::PagerdutyUtility.template_root File.expand_path(
+  File.join('..', '..', 'templates'), __FILE__
+)

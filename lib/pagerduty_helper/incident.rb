@@ -45,6 +45,7 @@ module PagerdutyHelper
       client.get_incident(id: incident_id)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def acknowledge_incident(incident_id)
       incident = fetch_incident(incident_id)
       return t('incident.not_found', id: incident_id) if incident == 'No results'
@@ -57,5 +58,6 @@ module PagerdutyHelper
         t('incident.unable_to_acknowledge', id: incident_id)
       end
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end
