@@ -15,7 +15,7 @@ describe Lita::Handlers::PagerdutyIncident, lita_handler: true do
         expect(Pagerduty).to receive(:new) { incidents }
         send_command('pager incidents all')
         expect(replies.last).to eq('ABC789: "Still broke", assigned to: '\
-                                   'bar@example.com')
+                                   'bar@example.com, url: https://acme.pagerduty.com/incidents/ABC789')
       end
     end
 
@@ -37,7 +37,7 @@ describe Lita::Handlers::PagerdutyIncident, lita_handler: true do
         send_command('pager identify bar@example.com', as: bar)
         send_command('pager incidents mine', as: bar)
         expect(replies.last).to eq('ABC789: "Still broke", assigned to: ' \
-                                   'bar@example.com')
+                                   'bar@example.com, url: https://acme.pagerduty.com/incidents/ABC789')
       end
     end
 
@@ -67,7 +67,8 @@ describe Lita::Handlers::PagerdutyIncident, lita_handler: true do
         expect(Pagerduty).to receive(:new) { new_incident }
         send_command('pager incident ABC123')
         expect(replies.last).to eq('ABC123: "something broke", ' \
-                                   'assigned to: foo@example.com')
+                                   'assigned to: foo@example.com, ' \
+                                   'url: https://acme.pagerduty.com/incidents/ABC123')
       end
     end
 
