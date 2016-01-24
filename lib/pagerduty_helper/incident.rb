@@ -5,7 +5,8 @@ module PagerdutyHelper
     def format_incident(incident)
       t('incident.info', id: incident.id,
                          subject: incident.trigger_summary_data.subject,
-                         assigned: incident.assigned_to_user.email)
+                         url: incident.html_url,
+                         assigned: incident.assigned_to_user.nil? ? "none" : incident.assigned_to_user.email)
     end
 
     def resolve_incident(incident_id)
