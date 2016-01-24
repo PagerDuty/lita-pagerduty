@@ -102,6 +102,19 @@ RSpec.shared_context 'basic fixtures' do
     client
   end
 
+  let(:incident_without_assigned_user) do
+    client = double
+    expect(client).to receive(:get_incident) do
+      double(
+        id: 'ABC456',
+        status: 'triggered',
+        trigger_summary_data: double(subject: 'something broke'),
+        assigned_to_user: nil
+      )
+    end
+    client
+  end
+
   let(:acknowledged_incident) do
     client = double
     expect(client).to receive(:get_incident) do
