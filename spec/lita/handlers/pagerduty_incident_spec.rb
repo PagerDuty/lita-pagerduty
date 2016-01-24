@@ -78,5 +78,14 @@ describe Lita::Handlers::PagerdutyIncident, lita_handler: true do
         expect(replies.last).to eq('ABC123: Incident not found')
       end
     end
+
+    describe 'when the incident id is longer than 6 characters' do
+      it 'shows the incident details' do
+        expect(Pagerduty).to receive(:new) { incident_with_long_id }
+        send_command('pager incident ABC123456789')
+        expect(replies.last).to eq('ABC123456789: "something broke", ' \
+                                   'assigned to: foo@example.com')
+      end
+    end
   end
 end
