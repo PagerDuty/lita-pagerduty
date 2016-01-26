@@ -171,4 +171,17 @@ RSpec.shared_context 'basic fixtures' do
     end
     client
   end
+
+  let(:incident_with_long_id) do
+    client = double
+    expect(client).to receive(:get_incident) do
+      double(
+        id: 'ABC123456789',
+        status: 'triggered',
+        trigger_summary_data: double(subject: 'something broke'),
+        assigned_to_user: double(email: 'foo@example.com')
+      )
+    end
+    client
+  end
 end
