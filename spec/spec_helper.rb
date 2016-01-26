@@ -187,6 +187,7 @@ RSpec.shared_context 'basic fixtures' do
       double(
         id: 'ABC123456789',
         status: 'triggered',
+        html_url: 'https://acme.pagerduty.com/incidents/ABC123456789',
         trigger_summary_data: double(subject: 'something broke'),
         assigned_to_user: double(email: 'foo@example.com')
       )
