@@ -61,12 +61,14 @@ RSpec.shared_context 'basic fixtures' do
           double(
             id: 'ABC123',
             status: 'resolved',
+            html_url: 'https://acme.pagerduty.com/incidents/ABC123',
             trigger_summary_data: double(subject: 'something broke'),
             assigned_to_user: double(email: 'foo@example.com')
           ),
           double(
             id: 'ABC789',
             status: 'triggered',
+            html_url: 'https://acme.pagerduty.com/incidents/ABC789',
             trigger_summary_data: double(subject: 'Still broke'),
             assigned_to_user: double(email: 'bar@example.com')
           )
@@ -76,6 +78,7 @@ RSpec.shared_context 'basic fixtures' do
     allow(client).to receive(:get_incident) do
       double(
         status: 'triggered',
+        html_url: 'https://acme.pagerduty.com/incidents/ABC789',
         trigger_summary_data: double(subject: 'Still broke'),
         assigned_to_user: double(email: 'bar@example.com'),
         acknowledge: { 'id' => 'ABC789', 'status' => 'acknowledged' },
@@ -92,6 +95,7 @@ RSpec.shared_context 'basic fixtures' do
       double(
         id: 'ABC123',
         status: 'triggered',
+        html_url: 'https://acme.pagerduty.com/incidents/ABC123',
         trigger_summary_data: double(subject: 'something broke'),
         assigned_to_user: double(email: 'foo@example.com'),
         acknowledge: { 'id' => 'ABC123', 'status' => 'acknowledged' },
@@ -107,6 +111,7 @@ RSpec.shared_context 'basic fixtures' do
     expect(client).to receive(:get_incident) do
       double(
         status: 'acknowledged',
+        html_url: 'https://acme.pagerduty.com/incidents/ABC123',
         trigger_summary_data: double(subject: 'something broke'),
         assigned_to_user: double(email: 'foo@example.com'),
         acknowledge: { 'error' =>
@@ -124,6 +129,7 @@ RSpec.shared_context 'basic fixtures' do
     expect(client).to receive(:get_incident) do
       double(
         status: 'resolved',
+        html_url: 'https://acme.pagerduty.com/incidents/ABC123',
         trigger_summary_data: double(subject: 'something broke'),
         assigned_to_user: double(email: 'foo@example.com'),
         notes: double(notes: [])
@@ -137,6 +143,7 @@ RSpec.shared_context 'basic fixtures' do
     expect(client).to receive(:get_incident) do
       double(
         status: 'notresolved',
+        html_url: 'https://acme.pagerduty.com/incidents/ABC123',
         resolve:  { 'id' => 'ABC123', 'status' => 'notresolved' }
       )
     end
@@ -148,6 +155,7 @@ RSpec.shared_context 'basic fixtures' do
     expect(client).to receive(:get_incident) do
       double(
         status: 'notacked',
+        html_url: 'https://acme.pagerduty.com/incidents/ABC123',
         acknowledge: { 'error' => {} },
         resolve:  { 'id' => 'ABC123', 'status' => 'notacked' }
       )
@@ -161,6 +169,7 @@ RSpec.shared_context 'basic fixtures' do
       double(
         id: 'ABC123',
         status: 'resolved',
+        html_url: 'https://acme.pagerduty.com/incidents/ABC123',
         trigger_summary_data: double(subject: 'something broke'),
         assigned_to_user: double(email: 'foo@example.com'),
         notes: double(
