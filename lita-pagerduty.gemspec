@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'lita-pagerduty'
-  spec.version       = '0.1.1'
+  spec.version       = '0.1.2'
   spec.authors       = ['Eric Sigler']
   spec.email         = ['eric@pagerduty.com']
   spec.description   = 'A Lita handler to interact with PagerDuty'
