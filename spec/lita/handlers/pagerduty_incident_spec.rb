@@ -89,5 +89,15 @@ describe Lita::Handlers::PagerdutyIncident, lita_handler: true do
                                    'url: https://acme.pagerduty.com/incidents/ABC123456789')
       end
     end
+
+    describe 'when the incident is not assigned to anyone' do
+      it 'shows incident details with none user' do
+        expect(Pagerduty).to receive(:new) { incident_without_assigned_user }
+        send_command('pager incident ABC456')
+        expect(replies.last).to eq('ABC456: "something broke", ' \
+                                   'assigned to: none, ' \
+                                   'url: https://acme.pagerduty.com/incidents/ABC456')
+      end
+    end
   end
 end

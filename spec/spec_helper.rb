@@ -1,6 +1,6 @@
 require 'simplecov'
 require 'coveralls'
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+SimpleCov.formatters = [
   SimpleCov::Formatter::HTMLFormatter,
   Coveralls::SimpleCov::Formatter
 ]
@@ -101,6 +101,20 @@ RSpec.shared_context 'basic fixtures' do
         acknowledge: { 'id' => 'ABC123', 'status' => 'acknowledged' },
         resolve: { 'id' => 'ABC123', 'status' => 'resolved' },
         notes: double(notes: [])
+      )
+    end
+    client
+  end
+
+  let(:incident_without_assigned_user) do
+    client = double
+    expect(client).to receive(:get_incident) do
+      double(
+        id: 'ABC456',
+        status: 'triggered',
+        html_url: 'https://acme.pagerduty.com/incidents/ABC456',
+        trigger_summary_data: double(subject: 'something broke'),
+        assigned_to_user: nil
       )
     end
     client
