@@ -8,6 +8,7 @@ describe Lita::Handlers::PagerdutyUtility, lita_handler: true do
     is_expected.to route_command('pager oncall ops').to(:on_call_lookup)
     is_expected.to route_command('pager identify foobar@example.com').to(:identify)
     is_expected.to route_command('pager forget').to(:forget)
+    is_expected.to route_command('pager me ops 12m').to(:pager_me)
   end
 
   before do

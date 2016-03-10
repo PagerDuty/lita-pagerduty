@@ -53,10 +53,14 @@ en:
           whos_on_call:
             syntax: who's on call?
             desc: Show everyone currently on call (not implemented yet)
+          pager_me:
+            syntax: pager me <schedule> <minutes>
+            desc: Take the pager for the given schedule for the specified number of minutes
         identify:
           already: You have already been identified!
           complete: You have now been identified.
           missing: You have not identified yourself (use the help command for more info)
+          unrecognised: You have identified yourself with an email address unknown to PagerDuty
         incident:
           acknowledged: "%{id}: Incident acknowledged"
           already_set: "%{id}: Incident already %{status}"
@@ -82,3 +86,6 @@ en:
           response: "%{name} (%{email}) is currently on call for %{schedule_name}"
           no_matching_schedule: "No matching schedules found for '%{schedule_name}'" 
           no_one_on_call: "No one is currently on call for %{schedule_name}"
+        pager_me:
+          success: "%{name} (%{email}) is now on call until %{finish}"
+          failure: "failed to take the pager"
