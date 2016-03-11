@@ -52,7 +52,7 @@ module Lita
       )
 
       route(
-        /^pager\s+me\s+(\w+)\s+(\d+)m?$/,
+        /^pager\s+me\s+(.+?)\s+(\d+)m?$/,
         :pager_me,
         command: true,
         help: { t('help.pager_me.syntax') => t('help.pager_me.desc') }
