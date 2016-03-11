@@ -96,7 +96,7 @@ module Lita
       private
 
       def lookup_on_call_user(schedule_id)
-        now = Time.now.utc
+        now = ::Time.now.utc
         pd_client.get_schedule_users(
           id: schedule_id,
           since: now.iso8601,
