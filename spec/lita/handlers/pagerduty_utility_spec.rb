@@ -8,6 +8,7 @@ describe Lita::Handlers::PagerdutyUtility, lita_handler: true do
     is_expected.to route_command('pager oncall ops').to(:on_call_lookup)
     is_expected.to route_command('pager identify foobar@example.com').to(:identify)
     is_expected.to route_command('pager forget').to(:forget)
+    is_expected.to route_command('pager whoami').to(:whoami)
     is_expected.to route_command('pager me ops 12m').to(:pager_me)
   end
 
@@ -54,6 +55,26 @@ describe Lita::Handlers::PagerdutyUtility, lita_handler: true do
         send_command('pager forget', as: foo)
         expect(replies.last).to eq('No email on record for you.')
       end
+    end
+  end
+
+  describe '#whoami' do
+    it 'shows the user when associated' do
+      foo = Lita::User.create(123, name: 'foo')
+      send_command('pager identify foo@example.com', as: foo)
+      send_command('pager whoami', as: foo)
+      expect(replies.last).to eq('You have been identified as foo@example.com')
+    end
+
+    it 'shows the user automatically if they have an email attribute' do
+      foo = Lita::User.create(123, name: 'foo', email: 'foo@example.com')
+      send_command('pager whoami', as: foo)
+      expect(replies.last).to eq('You have been identified as foo@example.com')
+    end
+
+    it 'shows a warning when that user is not associated' do
+      send_command('pager whoami')
+      expect(replies.last).to eq('You have not been identified')
     end
   end
 end

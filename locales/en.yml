@@ -56,6 +56,9 @@ en:
           pager_me:
             syntax: pager me <schedule> <minutes>
             desc: Take the pager for the given schedule for the specified number of minutes
+          whoami:
+            syntax: pager whoami
+            desc: Show the users's email address if they have been identified
         identify:
           already: You have already been identified!
           complete: You have now been identified.
@@ -84,8 +87,11 @@ en:
           no_schedules_found: "No schedules found"
         on_call_lookup:
           response: "%{name} (%{email}) is currently on call for %{schedule_name}"
-          no_matching_schedule: "No matching schedules found for '%{schedule_name}'" 
+          no_matching_schedule: "No matching schedules found for '%{schedule_name}'"
           no_one_on_call: "No one is currently on call for %{schedule_name}"
         pager_me:
           success: "%{name} (%{email}) is now on call until %{finish}"
           failure: "failed to take the pager"
+        whoami:
+          known: "You have been identified as %{email}"
+          unknown: You have not been identified

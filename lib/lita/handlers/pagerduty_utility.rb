@@ -52,6 +52,15 @@ module Lita
       )
 
       route(
+        /^pager\swhoami$/,
+        :whoami,
+        command: true,
+        help: {
+          t('help.whoami.syntax') => t('help.whoami.desc')
+        }
+      )
+
+      route(
         /^pager\s+me\s+(.+?)\s+(\d+)m?$/,
         :pager_me,
         command: true,
@@ -117,6 +126,12 @@ module Lita
         return response.reply(t('forget.unknown')) unless stored_email
         delete_user(response.user)
         response.reply(t('forget.complete'))
+      end
+
+      def whoami(response)
+        user = fetch_user(response.user)
+        return response.reply(t('whoami.unknown')) if user.nil?
+        response.reply(t('whoami.known', email: user))
       end
 
       private
