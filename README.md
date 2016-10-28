@@ -19,6 +19,8 @@ gem "lita-pagerduty"
 
 ## Configuration
 
+Create a PagerDuty api Key(v1 legacy) You will need to give it FullAccess to update incidents
+
 Add the following variables to your Lita config file:
 
 ``` ruby
