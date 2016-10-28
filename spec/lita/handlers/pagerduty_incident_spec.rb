@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Lita::Handlers::PagerdutyIncident, lita_handler: true do
+describe Lita::Handlers::PagerdutyIncident, lita_handler: true, additional_lita_handlers: Lita::Handlers::Pagerduty do
   include_context 'basic fixtures'
 
   it do

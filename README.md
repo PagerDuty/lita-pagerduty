@@ -26,6 +26,17 @@ config.handlers.pagerduty.api_key   = ''
 config.handlers.pagerduty.subdomain = ''
 ```
 
+Additionally `lita-pagerduty` can be configured to set room topics to note who is currently the on-call. It will replace the current topic of the configured rooms with the current on-call
+``` ruby
+config.handlers.pagerduty.topic_frequency = 300 # seconds
+
+config.handlers.pagerduty.topic_rooms = {
+  'your_channel' => ['Some schedule'],
+  # If you specify multiple schedules, the topic will be updated with the on-calls from each
+  'sre' => ['SRE', 'SRE Backup'],
+}
+```
+
 ## Usage
 
 ### Specific incidents

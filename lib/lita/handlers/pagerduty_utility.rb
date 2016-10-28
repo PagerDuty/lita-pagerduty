@@ -6,9 +6,6 @@ module Lita
   module Handlers
     # Utility-ish routes
     class PagerdutyUtility < Handler
-      config :api_key, required: true
-      config :subdomain, required: true
-
       namespace 'Pagerduty'
 
       include ::PagerdutyHelper::Incident
@@ -71,7 +68,7 @@ module Lita
       # rubocop:disable Metrics/AbcSize
       def on_call_lookup(response)
         schedule_name = response.match_data[1].strip
-        schedule = pd_client.get_schedules.schedules.find { |s| s.name.casecmp(schedule_name) == 0 }
+        schedule = schedule_by_name(schedule_name)
 
         unless schedule
           return response.reply(t('on_call_lookup.no_matching_schedule', schedule_name: schedule_name))
@@ -88,7 +85,7 @@ module Lita
       # rubocop:disable Metrics/AbcSize
       def pager_me(response)
         schedule_name = response.match_data[1].strip
-        schedule = pd_client.get_schedules.schedules.find { |s| s.name.casecmp(schedule_name) == 0 }
+        schedule = schedule_by_name(schedule_name)
         return response.reply(t('on_call_lookup.no_matching_schedule', schedule_name: schedule_name)) unless schedule
 
         email = fetch_user(response.user)
@@ -117,17 +114,6 @@ module Lita
         return response.reply(t('forget.unknown')) unless stored_email
         delete_user(response.user)
         response.reply(t('forget.complete'))
-      end
-
-      private
-
-      def lookup_on_call_user(schedule_id)
-        now = ::Time.now.utc
-        pd_client.get_schedule_users(
-          id: schedule_id,
-          since: now.iso8601,
-          until: (now + 3600).iso8601
-        ).first
       end
     end
 

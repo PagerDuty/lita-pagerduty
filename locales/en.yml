@@ -84,8 +84,11 @@ en:
           no_schedules_found: "No schedules found"
         on_call_lookup:
           response: "%{name} (%{email}) is currently on call for %{schedule_name}"
-          no_matching_schedule: "No matching schedules found for '%{schedule_name}'" 
+          no_matching_schedule: "No matching schedules found for '%{schedule_name}'"
           no_one_on_call: "No one is currently on call for %{schedule_name}"
+        on_call_topic:
+          singular: "%{name} is on-call"
+          plural: "%{names} are on-call"
         pager_me:
           success: "%{name} (%{email}) is now on call until %{finish}"
           failure: "failed to take the pager"
