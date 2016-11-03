@@ -15,7 +15,12 @@ module PagerdutyHelper
     end
 
     def fetch_user(user)
-      redis.get(format_user(user))
+      result = redis.get(format_user(user))
+      if result.nil? && user.metadata['email']
+        store_user(user, user.metadata['email'].to_s)
+        return redis.get(format_user(user))
+      end
+      result
     end
 
     def delete_user(user)

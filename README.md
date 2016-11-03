@@ -63,14 +63,15 @@ pager resolve <incident ID>        - Resolve a specific incident
 ### Schedules
 
 ```
-pager oncall - List available schedules
-pager oncall <schedule> - Show who is on call for the given schedule
+pager oncall                       - List available schedules
+pager oncall <schedule>            - Show who is on call for the given schedule
 ```
 
 ### Misc
 
 ```
-pager identify <email address>     - Associate your chat user with your email address
+pager identify <email address>     - Associate your chat user with your email address (only needed on chat services that don't automatically provide it)
+pager whoami                       - Shows what email address is associated with your chat user
 pager forget                       - Remove your chat user / email association
 ```
 
