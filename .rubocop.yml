@@ -4,3 +4,6 @@ FileName:
 
 LineLength:
   Max: 130
+
+Metrics/BlockLength:
+  Max: 175
