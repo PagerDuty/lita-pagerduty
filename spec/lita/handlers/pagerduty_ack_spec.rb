@@ -45,8 +45,7 @@ describe Lita::Handlers::PagerdutyAck, lita_handler: true do
         expect(Pagerduty).to receive(:new) { incidents }
         send_command('pager identify foo@example.com', as: foo)
         send_command('pager ack mine', as: foo)
-        expect(replies.last).to eq('You have no triggered, open, or ' \
-                                   'acknowledged incidents')
+        expect(replies.last).to eq('You have no triggered, open, or acknowledged incidents')
       end
     end
 

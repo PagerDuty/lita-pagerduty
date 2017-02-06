@@ -36,8 +36,7 @@ describe Lita::Handlers::PagerdutyIncident, lita_handler: true do
         expect(Pagerduty).to receive(:new) { incidents }
         send_command('pager identify bar@example.com', as: bar)
         send_command('pager incidents mine', as: bar)
-        expect(replies.last).to eq('ABC789: "Still broke", assigned to: ' \
-                                   'bar@example.com, url: https://acme.pagerduty.com/incidents/ABC789')
+        expect(replies.last).to eq('ABC789: "Still broke", assigned to: bar@example.com, url: https://acme.pagerduty.com/incidents/ABC789')
       end
     end
 
@@ -47,8 +46,7 @@ describe Lita::Handlers::PagerdutyIncident, lita_handler: true do
         expect(Pagerduty).to receive(:new) { incidents }
         send_command('pager identify foo@example.com', as: foo)
         send_command('pager incidents mine', as: foo)
-        expect(replies.last).to eq('You have no triggered, open, or ' \
-                                   'acknowledged incidents')
+        expect(replies.last).to eq('You have no triggered, open, or acknowledged incidents')
       end
     end
 

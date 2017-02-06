@@ -45,8 +45,7 @@ describe Lita::Handlers::PagerdutyResolve, lita_handler: true do
         expect(Pagerduty).to receive(:new) { incidents }
         send_command('pager identify foo@example.com', as: foo)
         send_command('pager resolve mine', as: foo)
-        expect(replies.last).to eq('You have no triggered, open, or ' \
-                                   'acknowledged incidents')
+        expect(replies.last).to eq('You have no triggered, open, or acknowledged incidents')
       end
     end
 

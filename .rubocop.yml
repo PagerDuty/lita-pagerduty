@@ -1,3 +1,5 @@
+require: rubocop-rspec
+
 FileName:
   Exclude:
     - lib/lita-pagerduty.rb
@@ -7,3 +9,12 @@ LineLength:
 
 Metrics/BlockLength:
   Max: 175
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 2
