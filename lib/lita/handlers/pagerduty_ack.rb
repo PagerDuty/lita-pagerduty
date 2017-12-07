@@ -67,7 +67,7 @@ module Lita
 
       def ack(response)
         incident_id = response.match_data['incident_id']
-        return if incident_id == 'all' || incident_id == 'mine'
+        return if (incident_id == 'all') || (incident_id == 'mine')
         response.reply(acknowledge_incident(incident_id))
       end
     end

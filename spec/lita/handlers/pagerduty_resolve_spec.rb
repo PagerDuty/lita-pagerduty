@@ -12,7 +12,7 @@ describe Lita::Handlers::PagerdutyResolve, lita_handler: true do
   describe '#resolve_all' do
     describe 'when there are resolvable incidents' do
       it 'shows them as resolved' do
-        expect(Pagerduty).to receive(:new).twice { incidents }
+        expect(Pagerduty).to(receive(:new).twice { incidents })
         send_command('pager resolve all')
         expect(replies.last).to eq('Resolved: ABC789')
       end
@@ -32,7 +32,7 @@ describe Lita::Handlers::PagerdutyResolve, lita_handler: true do
     describe 'when there are resolvable incidents for the user' do
       it 'shows them as acknowledged' do
         bar = Lita::User.create(123, name: 'bar')
-        expect(Pagerduty).to receive(:new).twice { incidents }
+        expect(Pagerduty).to(receive(:new).twice { incidents })
         send_command('pager identify bar@example.com', as: bar)
         send_command('pager resolve mine', as: bar)
         expect(replies.last).to eq('Resolved: ABC789')

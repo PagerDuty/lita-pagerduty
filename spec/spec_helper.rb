@@ -129,8 +129,7 @@ RSpec.shared_context 'basic fixtures' do
         trigger_summary_data: double(subject: 'something broke'),
         assigned_to_user: double(email: 'foo@example.com'),
         acknowledge: { 'error' =>
-          { 'message' => 'Incident Already Acknowledged', 'code' => 1002 }
-        },
+          { 'message' => 'Incident Already Acknowledged', 'code' => 1002 } },
         resolve:  { 'id' => 'ABC123', 'status' => 'resolved' },
         notes: double(notes: [])
       )

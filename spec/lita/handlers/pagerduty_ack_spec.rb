@@ -12,7 +12,7 @@ describe Lita::Handlers::PagerdutyAck, lita_handler: true do
   describe '#ack_all' do
     describe 'when there are acknowledgable incidents' do
       it 'shows them as acknowledged' do
-        expect(Pagerduty).to receive(:new).twice { incidents }
+        expect(Pagerduty).to(receive(:new).twice { incidents })
         send_command('pager ack all')
         expect(replies.last).to eq('Acknowledged: ABC789')
       end
@@ -32,7 +32,7 @@ describe Lita::Handlers::PagerdutyAck, lita_handler: true do
     describe 'when there are acknowledgable incidents for the user' do
       it 'shows them as acknowledged' do
         bar = Lita::User.create(123, name: 'bar')
-        expect(Pagerduty).to receive(:new).twice { incidents }
+        expect(Pagerduty).to(receive(:new).twice { incidents })
         send_command('pager identify bar@example.com', as: bar)
         send_command('pager ack mine', as: bar)
         expect(replies.last).to eq('Acknowledged: ABC789')
