@@ -78,13 +78,13 @@ en:
           acknowledged: "Acknowledged: %{list}"
           resolved: "Resolved: %{list}"
         note:
-          show: "%{id}: %{content} (%{email})"
+          show: "%{id}: %{content} (%{user})"
         on_call_list:
           response: "Available schedules:\n%{schedules}"
           no_schedules_found: "No schedules found"
         on_call_lookup:
           response: "%{name} (%{email}) is currently on call for %{schedule_name}"
-          no_matching_schedule: "No matching schedules found for '%{schedule_name}'" 
+          no_matching_schedule: "No matching schedules found for '%{schedule_name}'"
           no_one_on_call: "No one is currently on call for %{schedule_name}"
         pager_me:
           success: "%{name} (%{email}) is now on call until %{finish}"
