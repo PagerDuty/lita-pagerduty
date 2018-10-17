@@ -78,9 +78,9 @@ class PagerDuty
 
   def headers(email)
     {
-      'Accept': 'application/vnd.pagerduty+json;version=2',
-      'Authorization': "Token token=#{@token}",
-      'From': email
+      'Accept' => 'application/vnd.pagerduty+json;version=2',
+      'Authorization' => "Token token=#{@token}",
+      'From' => email
     }
   end
 end

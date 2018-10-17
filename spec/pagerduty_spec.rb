@@ -7,9 +7,9 @@ describe PagerDuty do
   before :each do
     expect(http).to receive(:url_prefix=).with('https://api.pagerduty.com/')
     expect(http).to receive(:headers=).with({
-      :Accept => 'application/vnd.pagerduty+json;version=2',
-      :Authorization => 'Token token=token',
-      :From => 'email'
+      'Accept' => 'application/vnd.pagerduty+json;version=2',
+      'Authorization' => 'Token token=token',
+      'From' => 'email'
     })
   end
 
