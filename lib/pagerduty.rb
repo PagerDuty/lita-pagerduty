@@ -16,7 +16,7 @@ class PagerDuty
     JSON.parse(response.body, symbolize_names: true).fetch(:incident, nil)
   end
 
-  def get_users(params)
+  def get_users(params = {})
     response = @http.get '/users', params
     JSON.parse(response.body, symbolize_names: true).fetch(:users, [])
   end

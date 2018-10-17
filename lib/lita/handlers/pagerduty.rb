@@ -49,7 +49,7 @@ module Lita
         schedule = pagerduty.get_schedules({ query: schedule_name }).first
         return response.reply(t('on_call_lookup.no_matching_schedule', schedule_name: schedule_name)) unless schedule
         user = pagerduty.get_oncalls('schedule_ids[]': schedule[:id], 'include[]': 'users').first.fetch(:user, nil)
-        response.reply(t('on_call_lookup.no_one_on_call', schedule_name: schedule_name)) unless user
+        return response.reply(t('on_call_lookup.no_one_on_call', schedule_name: schedule_name)) unless user
         response.reply(t('on_call_lookup.response', name: user[:summary], email: user[:email], schedule_name: schedule[:name]))
       end
 
@@ -177,7 +177,6 @@ module Lita
         end
         response.reply(message)
       rescue => e
-        puts e.inspect
         response.reply(t('incident.not_found', id: incident_id))
       end
 
