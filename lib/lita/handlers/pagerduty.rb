@@ -48,7 +48,7 @@ module Lita
         schedule_name = response.match_data[1].strip
         schedule = pagerduty.get_schedules({ query: schedule_name }).first
         return response.reply(t('on_call_lookup.no_matching_schedule', schedule_name: schedule_name)) unless schedule
-        user = pagerduty.get_oncalls('schedule_ids[]': schedule[:id], 'include[]': 'users').first.fetch(:user, nil)
+        user = pagerduty.get_oncalls('schedule_ids[]' => schedule[:id], 'include[]' => 'users').first.fetch(:user, nil)
         return response.reply(t('on_call_lookup.no_one_on_call', schedule_name: schedule_name)) unless user
         response.reply(t('on_call_lookup.response', name: user[:summary], email: user[:email], schedule_name: schedule[:name]))
       end
@@ -66,7 +66,7 @@ module Lita
         email = redis.get("user_#{response.user.id}")
         user = pagerduty.get_users({ query: email }).first
         return response.reply(t('incident.none_mine')) unless user
-        incidents = pagerduty.get_incidents('user_ids[]': user[:id])
+        incidents = pagerduty.get_incidents('user_ids[]' => user[:id])
         return response.reply(t('incident.none_mine')) if incidents.empty?
         ids = incidents.map { |i| i[:id] }
         result = pagerduty.resolve_incidents(ids)
@@ -95,7 +95,7 @@ module Lita
         email = redis.get("user_#{response.user.id}")
         user = pagerduty.get_users({ query: email }).first
         return response.reply(t('incident.none_mine')) unless user
-        incidents = pagerduty.get_incidents('user_ids[]': user[:id])
+        incidents = pagerduty.get_incidents('user_ids[]' => user[:id])
         return response.reply(t('incident.none_mine')) if incidents.empty?
         ids = incidents.map { |i| i[:id] }
         result = pagerduty.acknowledge_incidents(ids)
@@ -143,7 +143,7 @@ module Lita
         email = redis.get("user_#{response.user.id}")
         user = pagerduty.get_users({ query: email }).first
         return response.reply(t('incident.none_mine')) unless user
-        incidents = pagerduty.get_incidents('user_ids[]': user[:id])
+        incidents = pagerduty.get_incidents('user_ids[]' => user[:id])
         return response.reply(t('incident.none')) if incidents.empty?
         message = incidents.map do |incident|
           assignee = (incident.fetch(:assignments, []).first || {}).fetch(:assignee, {}).fetch(:summary, 'none')
