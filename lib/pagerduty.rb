@@ -11,6 +11,7 @@ class Pagerduty
     data = JSON.parse(response.body, symbolize_names: true)
                .fetch(:incidents, [])
     raise Exceptions::IncidentsEmptyList if data.empty?
+
     data
   end
 
@@ -18,6 +19,7 @@ class Pagerduty
     response = @http.get '/users', params
     data = JSON.parse(response.body, symbolize_names: true).fetch(:users, [])
     raise Exceptions::UsersEmptyList if data.empty?
+
     data
   end
 
@@ -26,6 +28,7 @@ class Pagerduty
     data = JSON.parse(response.body, symbolize_names: true)
                .fetch(:schedules, [])
     raise Exceptions::SchedulesEmptyList if data.empty?
+
     data
   end
 
@@ -33,12 +36,14 @@ class Pagerduty
     response = @http.get '/oncalls', params
     data = JSON.parse(response.body, symbolize_names: true).fetch(:oncalls, [])
     raise Exceptions::NoOncallUser if data.empty?
+
     data.first.fetch(:user)
   end
 
   def get_incident(id = '404stub')
     response = @http.get "/incidents/#{id}"
     raise Exceptions::IncidentNotFound if response.status == 404
+
     JSON.parse(response.body, symbolize_names: true).fetch(:incident, nil)
   end
 
@@ -47,6 +52,7 @@ class Pagerduty
     raise Exceptions::IncidentNotFound if response.status == 404
     data = JSON.parse(response.body, symbolize_names: true).fetch(:notes, [])
     raise Exceptions::NotesEmptyList if data.empty?
+
     data
   end
 
@@ -57,6 +63,7 @@ class Pagerduty
     payload = { incidents: incidents }
     response = @http.put '/incidents', payload
     raise Exceptions::IncidentManageUnsuccess if response.status != 200
+
     response
   end
 
@@ -70,6 +77,7 @@ class Pagerduty
     } }
     response = @http.post "/schedules/#{schedule_id}/overrides", payload
     raise Exceptions::OverrideUnsuccess if response.status != 201
+
     JSON.parse(response.body, symbolize_names: true).fetch(:override, nil)
   end
 

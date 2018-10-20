@@ -3,3 +3,5 @@ AllCops:
     - spec/**/*
 Documentation:
   Enabled: false
+Style/FileName:
+  Enabled: false
