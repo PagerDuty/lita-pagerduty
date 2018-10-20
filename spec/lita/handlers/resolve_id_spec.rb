@@ -7,17 +7,13 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     end
 
     it 'not found' do
-      expect_any_instance_of(PagerDuty).to receive(:resolve_incidents).and_return(
-        OpenStruct.new(status: 400)
-      )
+      expect_any_instance_of(Pagerduty).to receive(:manage_incidents).and_raise(Exceptions::IncidentManageUnsuccess)
       send_command('pager resolve ABC123')
       expect(replies.last).to be_nil
     end
 
     it 'found' do
-      expect_any_instance_of(PagerDuty).to receive(:resolve_incidents).and_return(
-        OpenStruct.new(status: 200)
-      )
+      expect_any_instance_of(Pagerduty).to receive(:manage_incidents)
       send_command('pager resolve ABC123')
       expect(replies.last).to eq 'Resolved: ABC123'
     end

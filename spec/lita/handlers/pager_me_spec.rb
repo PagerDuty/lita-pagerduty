@@ -7,6 +7,7 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     end
 
     it 'unknown user' do
+      expect_any_instance_of(Pagerduty).to receive(:get_schedules).and_return([{ id: 'bcd123'}])
       user = Lita::User.create(123, name: 'foo')
       send_command('pager me abc 1m', as: user)
       expect(replies.last).to eq('You have not identified yourself (use the help command for more info)')
@@ -15,8 +16,8 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     it 'unrecognised user' do
       user = Lita::User.create(123, name: 'foo')
       send_command('pager identify foo@pagerduty.com', as: user)
-      expect_any_instance_of(PagerDuty).to receive(:get_schedules).and_return([{ id: 'bcd123'}])
-      expect_any_instance_of(PagerDuty).to receive(:get_users).and_return([])
+      expect_any_instance_of(Pagerduty).to receive(:get_schedules).and_return([{ id: 'bcd123'}])
+      expect_any_instance_of(Pagerduty).to receive(:get_users).and_raise(Exceptions::UsersEmptyList)
       send_command('pager me abc 1m', as: user)
       expect(replies.last).to eq('You have identified yourself with an email address unknown to PagerDuty')
     end
@@ -24,7 +25,7 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     it 'unknown schedule' do
       user = Lita::User.create(123, name: 'foo')
       send_command('pager identify foo@pagerduty.com', as: user)
-      expect_any_instance_of(PagerDuty).to receive(:get_schedules).and_return([])
+      expect_any_instance_of(Pagerduty).to receive(:get_schedules).and_raise(Exceptions::SchedulesEmptyList)
       send_command('pager me abc 1m', as: user)
       expect(replies.last).to eq('No matching schedules found for \'abc\'')
     end
@@ -32,9 +33,9 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     it 'failure' do
       user = Lita::User.create(123, name: 'foo')
       send_command('pager identify foo@pagerduty.com', as: user)
-      expect_any_instance_of(PagerDuty).to receive(:get_schedules).and_return([{ id: 'abc123' }])
-      expect_any_instance_of(PagerDuty).to receive(:get_users).and_return([{id: 'abc123'}])
-      expect_any_instance_of(PagerDuty).to receive(:override).and_return(nil)
+      expect_any_instance_of(Pagerduty).to receive(:get_schedules).and_return([{ id: 'abc123' }])
+      expect_any_instance_of(Pagerduty).to receive(:get_users).and_return([{id: 'abc123'}])
+      expect_any_instance_of(Pagerduty).to receive(:override).and_raise(Exceptions::OverrideUnsuccess)
       send_command('pager me abc 1m', as: user)
       expect(replies.last).to eq('failed to take the pager')
     end
@@ -42,9 +43,9 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     it 'success' do
       user = Lita::User.create(123, name: 'foo')
       send_command('pager identify foo@pagerduty.com', as: user)
-      expect_any_instance_of(PagerDuty).to receive(:get_schedules).and_return([{ id: 'abc123' }])
-      expect_any_instance_of(PagerDuty).to receive(:get_users).and_return([{id: 'abc123', email: 'foo@pagerduty.com'}])
-      expect_any_instance_of(PagerDuty).to receive(:override).and_return({
+      expect_any_instance_of(Pagerduty).to receive(:get_schedules).and_return([{ id: 'abc123' }])
+      expect_any_instance_of(Pagerduty).to receive(:get_users).and_return([{id: 'abc123', email: 'foo@pagerduty.com'}])
+      expect_any_instance_of(Pagerduty).to receive(:override).and_return({
         user: { summary: 'foo' },
         end: 12345
       })

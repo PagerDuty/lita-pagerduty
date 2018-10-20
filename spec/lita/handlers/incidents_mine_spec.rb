@@ -7,7 +7,6 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     end
 
     it 'unknown user' do
-      expect_any_instance_of(PagerDuty).to receive(:get_users).and_return([])
       user = Lita::User.create(123, name: 'foo')
       send_command('pager incidents mine', as: user)
       expect(replies.last).to eq('You have no triggered, open, or acknowledged incidents')
@@ -16,8 +15,8 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     it 'empty list' do
       user = Lita::User.create(123, name: 'foo')
       send_command('pager identify foo@pagerduty.com', as: user)
-      expect_any_instance_of(PagerDuty).to receive(:get_users).and_return([{ id: 'abc123'}])
-      expect_any_instance_of(PagerDuty).to receive(:get_incidents).and_return([])
+      expect_any_instance_of(Pagerduty).to receive(:get_users).and_return([{ id: 'abc123'}])
+      expect_any_instance_of(Pagerduty).to receive(:get_incidents).and_raise(Exceptions::IncidentsEmptyList)
       send_command('pager incidents mine', as: user)
       expect(replies.last).to eq('No triggered, open, or acknowledged incidents')
     end
@@ -25,8 +24,8 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     it 'list of incidents' do
       user = Lita::User.create(123, name: 'foo')
       send_command('pager identify foo@pagerduty.com', as: user)
-      expect_any_instance_of(PagerDuty).to receive(:get_users).and_return([{ id: 'abc123'}])
-      expect_any_instance_of(PagerDuty).to receive(:get_incidents).and_return([
+      expect_any_instance_of(Pagerduty).to receive(:get_users).and_return([{ id: 'abc123'}])
+      expect_any_instance_of(Pagerduty).to receive(:get_incidents).and_return([
         { id: 'ABC123', title: 'ABC', html_url: 'https://foo.pagerduty.com/incidents/ABC123', assignments: [{ assignee: { summary: 'foo' } }] }
       ])
       send_command('pager incidents mine', as: user)

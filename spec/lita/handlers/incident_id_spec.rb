@@ -7,7 +7,7 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     end
 
     it 'found' do
-      expect_any_instance_of(PagerDuty).to receive(:get_incident).and_return({
+      expect_any_instance_of(Pagerduty).to receive(:get_incident).and_return({
         id: 'ABC123', title: 'ABC', html_url: 'https://foo.pagerduty.com/incidents/ABC123'
       })
       send_command('pager incident ABC123')
@@ -15,7 +15,7 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     end
 
     it 'not found' do
-      expect_any_instance_of(PagerDuty).to receive(:get_incident).and_return(nil)
+      expect_any_instance_of(Pagerduty).to receive(:get_incident).and_raise(Exceptions::IncidentNotFound)
       send_command('pager incident ABC123')
       expect(replies.last).to eq('ABC123: Incident not found')
     end

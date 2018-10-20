@@ -7,16 +7,16 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     end
 
     it 'empty list' do
-      expect_any_instance_of(PagerDuty).to receive(:get_incidents).and_return([])
+      expect_any_instance_of(Pagerduty).to receive(:get_incidents).and_raise(Exceptions::IncidentsEmptyList)
       send_command('pager resolve all')
       expect(replies.last).to eq('No triggered, open, or acknowledged incidents')
     end
 
     it 'list of incidents' do
-      expect_any_instance_of(PagerDuty).to receive(:get_incidents).and_return([
+      expect_any_instance_of(Pagerduty).to receive(:get_incidents).and_return([
         { id: 'ABC123' }, { id: 'ABC124' }
       ])
-      expect_any_instance_of(PagerDuty).to receive(:resolve_incidents).and_return(
+      expect_any_instance_of(Pagerduty).to receive(:manage_incidents).and_return(
         OpenStruct.new(status: 200)
       )
       send_command('pager resolve all')

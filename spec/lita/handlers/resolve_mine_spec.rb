@@ -7,28 +7,31 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
     end
 
     it 'unknown user' do
-      expect_any_instance_of(PagerDuty).to receive(:get_users).and_return([])
       user = Lita::User.create(123, name: 'foo')
       send_command('pager resolve mine', as: user)
       expect(replies.last).to eq('You have no triggered, open, or acknowledged incidents')
     end
 
     it 'empty list' do
-      expect_any_instance_of(PagerDuty).to receive(:get_users).and_return([{ id: 'abc123' }])
-      expect_any_instance_of(PagerDuty).to receive(:get_incidents).and_return([])
-      send_command('pager resolve mine')
+      user = Lita::User.create(123, name: 'foo')
+      send_command('pager identify foo@pagerduty.com', as: user)
+      expect_any_instance_of(Pagerduty).to receive(:get_users).and_return([{ id: 'abc123' }])
+      expect_any_instance_of(Pagerduty).to receive(:get_incidents).and_raise(Exceptions::IncidentsEmptyList)
+      send_command('pager resolve mine', as: user)
       expect(replies.last).to eq('You have no triggered, open, or acknowledged incidents')
     end
 
     it 'list of incidents' do
-      expect_any_instance_of(PagerDuty).to receive(:get_users).and_return([{ id: 'abc123' }])
-      expect_any_instance_of(PagerDuty).to receive(:get_incidents).and_return([
+      user = Lita::User.create(123, name: 'foo')
+      send_command('pager identify foo@pagerduty.com', as: user)
+      expect_any_instance_of(Pagerduty).to receive(:get_users).and_return([{ id: 'abc123' }])
+      expect_any_instance_of(Pagerduty).to receive(:get_incidents).and_return([
         { id: 'ABC123' }, { id: 'ABC124' }
       ])
-      expect_any_instance_of(PagerDuty).to receive(:resolve_incidents).and_return(
+      expect_any_instance_of(Pagerduty).to receive(:manage_incidents).and_return(
         OpenStruct.new(status: 200)
       )
-      send_command('pager resolve mine')
+      send_command('pager resolve mine', as: user)
       expect(replies.last).to eq('Resolved: ABC123, ABC124')
     end
   end
