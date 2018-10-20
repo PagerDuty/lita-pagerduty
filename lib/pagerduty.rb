@@ -50,6 +50,7 @@ class Pagerduty
   def get_notes_by_incident_id(incident_id)
     response = @http.get "/incidents/#{incident_id}/notes"
     raise Exceptions::IncidentNotFound if response.status == 404
+
     data = JSON.parse(response.body, symbolize_names: true).fetch(:notes, [])
     raise Exceptions::NotesEmptyList if data.empty?
 

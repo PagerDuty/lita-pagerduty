@@ -6,6 +6,7 @@ class Store
   def get_user(response)
     email = @redis.get("user_#{response.user.id}")
     raise Exceptions::UserNotIdentified unless email
+
     email
   end
 
