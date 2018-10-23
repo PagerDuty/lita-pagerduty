@@ -18,7 +18,7 @@ module Commands
 
     def query_params
       {
-        'statuses' => %w[triggered acknowledged],
+        statuses: %w[triggered acknowledged],
         'user_ids[]' => current_user[:id]
       }
     end
