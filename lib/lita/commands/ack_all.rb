@@ -15,7 +15,7 @@ module Commands
     private
 
     def query_params
-      { 'statuses' => %w[triggered acknowledged] }
+      { statuses: %w[triggered acknowledged] }
     end
   end
 end
