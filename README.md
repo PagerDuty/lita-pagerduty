@@ -24,11 +24,18 @@ Create a PagerDuty api Key(v1 legacy) You will need to give it FullAccess to upd
 Add the following variables to your Lita config file:
 
 ``` ruby
-config.handlers.pagerduty.api_key   = ''
-config.handlers.pagerduty.subdomain = ''
+config.handlers.pagerduty.api_key = ''
+config.handlers.pagerduty.email   = ''
 ```
 
 ## Usage
+
+### Misc
+
+```
+pager identify <email address>     - Associate your chat user with your email address
+pager forget                       - Remove your chat user / email association
+```
 
 ### Specific incidents
 
@@ -65,13 +72,6 @@ pager resolve <incident ID>        - Resolve a specific incident
 ```
 pager oncall - List available schedules
 pager oncall <schedule> - Show who is on call for the given schedule
-```
-
-### Misc
-
-```
-pager identify <email address>     - Associate your chat user with your email address
-pager forget                       - Remove your chat user / email association
 ```
 
 ## License

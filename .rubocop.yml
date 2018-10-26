@@ -1,10 +1,7 @@
-FileName:
-  Exclude:
-    - lib/lita-pagerduty.rb
-
-Metrics/LineLength:
-  Max: 130
-
-Metrics/BlockLength:
+AllCops:
   Exclude:
     - spec/**/*
+Documentation:
+  Enabled: false
+Style/FileName:
+  Enabled: false
