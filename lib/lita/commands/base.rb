@@ -65,7 +65,7 @@ module Commands
     end
 
     def pagerduty
-      @pagerduty ||= ::Pagerduty.new(http, config.api_key, config.email)
+      @pagerduty ||= ::Pagerduty.new(http, config.api_key, config.email, config.teams)
     end
 
     def store
