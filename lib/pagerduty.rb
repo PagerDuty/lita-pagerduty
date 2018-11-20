@@ -12,30 +12,35 @@ class Pagerduty
   def get_incidents(params = {})
     data = get_resources(:incidents, params)
     raise Exceptions::IncidentsEmptyList if data.empty?
+
     data
   end
 
   def get_users(params = {})
     data = get_resources(:users, params)
     raise Exceptions::UsersEmptyList if data.empty?
+
     data
   end
 
   def get_schedules(params = {})
     data = get_resources(:schedules, params)
     raise Exceptions::SchedulesEmptyList if data.empty?
+
     data
   end
 
   def get_oncall_user(params = {})
     data = get_resources(:oncalls, params)
     raise Exceptions::NoOncallUser if data.empty?
+
     data.first.fetch(:user)
   end
 
   def get_incident(id = '404stub')
     response = http.get "/incidents/#{id}"
     raise Exceptions::IncidentNotFound if response.status == 404
+
     parse_json_response(response, :incident)
   end
 
@@ -61,17 +66,11 @@ class Pagerduty
   end
 
   def override(schedule_id, user_id, minutes)
-    from = ::Time.now.utc + 10
-    to = from + (60 * minutes)
-    payload = { override: {
-      start: from.iso8601,
-      end: to.iso8601,
-      user: { id: user_id, type: 'user_reference' }
-    } }
-    response = http.post "/schedules/#{schedule_id}/overrides", payload
+    payload = override_payload(user_id, minutes)
+    response = http.post("/schedules/#{schedule_id}/overrides", payload)
     raise Exceptions::OverrideUnsuccess if response.status != 201
 
-    JSON.parse(response.body, symbolize_names: true).fetch(:override, nil)
+    parse_json_response(response, :override)
   end
 
   private
@@ -84,13 +83,13 @@ class Pagerduty
     }
   end
 
-  # Fetches a list of resources from a given collection using Pagerduty REST v2 API
+  # Fetches a list of resources from a given collection using Pagerduty REST API
   def get_resources(collection_name, params = {})
     # Scope down to a single team
-    params.merge!(team_ids: teams) if teams.any?
+    params[:team_ids] = teams if teams.any?
 
     # Get the resources
-    response = http.get "/#{collection_name}", params
+    response = http.get("/#{collection_name}", params)
 
     # Parse the reponse and get the objects from the collection
     parse_json_response(response, collection_name, [])
@@ -102,4 +101,18 @@ class Pagerduty
     data.fetch(response_key, default_value)
   end
 
+  # Returns a payload for overriding a schedule and putting the user
+  # identified by +user_id+ on-call for the period defined by +minutes+
+  def override_payload(user_id, minutes)
+    # start 10 sec from now
+    from = ::Time.now.utc + 10
+    to = from + (60 * minutes)
+
+    {
+      override: {
+        start: from.iso8601, end: to.iso8601,
+        user: { id: user_id, type: 'user_reference' }
+      }
+    }
+  end
 end

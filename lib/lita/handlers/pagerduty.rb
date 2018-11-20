@@ -33,7 +33,12 @@ module Lita
       end
 
       def pagerduty
-        @pagerduty ||= ::Pagerduty.new(http, config.api_key, config.email, config.teams)
+        @pagerduty ||= ::Pagerduty.new(
+          http,
+          config.api_key,
+          config.email,
+          config.teams
+        )
       end
 
       def store
