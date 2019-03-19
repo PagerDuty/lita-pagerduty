@@ -92,7 +92,7 @@ describe Pagerduty do
   end
 
   it 'override' do
-    expect(Time).to receive(:now).and_return(Time.new(2000))
+    expect(Time).to receive(:now).and_return(Time.new(2000, 1, 1, 0, 0, 0, 0))
     params = { override: {
         end: '2000-01-01T00:01:10Z',
         start: '2000-01-01T00:00:10Z',
