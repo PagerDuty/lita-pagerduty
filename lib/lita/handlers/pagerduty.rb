@@ -14,8 +14,8 @@ module Lita
           command['method'].to_sym,
           command: true,
           help: {
-            "help.#{command['method']}.syntax" =>
-              "help.#{command['method']}.desc"
+            t("help.#{command['method']}.syntax") =>
+              t("help.#{command['method']}.desc")
           }
         )
       end
