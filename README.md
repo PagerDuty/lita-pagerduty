@@ -13,7 +13,7 @@ A [PagerDuty](http://pagerduty.com) plugin for [Lita](https://github.com/jimmycu
 
 Add lita-pagerduty to your Lita instance's Gemfile:
 
-``` ruby
+```ruby
 gem "lita-pagerduty"
 ```
 
@@ -23,9 +23,16 @@ Create a PagerDuty api Key(v1 legacy) You will need to give it FullAccess to upd
 
 Add the following variables to your Lita config file:
 
-``` ruby
+```ruby
 config.handlers.pagerduty.api_key = ''
 config.handlers.pagerduty.email   = ''
+```
+
+If your account has the teams capability and you want to scope Lita's access to a specific set of
+teams, you can set the list of teams by adding the following to your config file:
+
+```ruby
+config..handlers.pagerduty.teams = [ "team-a", "team-b" ]
 ```
 
 ## Usage

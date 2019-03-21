@@ -1,3 +1,6 @@
+# We rely on timezone being in UTC
+ENV['TZ'] = 'UTC'
+
 require 'simplecov'
 require 'coveralls'
 SimpleCov.formatters = [

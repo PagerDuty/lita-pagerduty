@@ -4,6 +4,7 @@ module Lita
       namespace 'Pagerduty'
       config :api_key, required: true
       config :email, required: true
+      config :teams, required: false
 
       COMMANDS_PATH = File.read("#{File.dirname(__FILE__)}/commands.yml")
       COMMANDS = YAML.safe_load(COMMANDS_PATH)
@@ -32,7 +33,12 @@ module Lita
       end
 
       def pagerduty
-        @pagerduty ||= ::Pagerduty.new(http, config.api_key, config.email)
+        @pagerduty ||= ::Pagerduty.new(
+          http,
+          config.api_key,
+          config.email,
+          config.teams
+        )
       end
 
       def store
