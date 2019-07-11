@@ -50,6 +50,9 @@ en:
           on_call_lookup:
             syntax: pager oncall <schedule>
             desc: Show who is on call for the given schedule
+          base_lookup:
+            syntax: pager base <schedule>
+            desc: Show who the base on-call person is for the given schedule
           whos_on_call:
             syntax: who's on call?
             desc: Show everyone currently on call (not implemented yet)
@@ -83,6 +86,10 @@ en:
           response: "Available schedules:\n%{schedules}"
           no_schedules_found: "No schedules found"
         on_call_lookup:
+          response: "%{name} (%{email}) is currently on call for %{schedule_name}"
+          no_matching_schedule: "No matching schedules found for '%{schedule_name}'"
+          no_one_on_call: "No one is currently on call for %{schedule_name}"
+        base_lookup:
           response: "%{name} (%{email}) is currently on call for %{schedule_name}"
           no_matching_schedule: "No matching schedules found for '%{schedule_name}'"
           no_one_on_call: "No one is currently on call for %{schedule_name}"

@@ -37,6 +37,13 @@ class Pagerduty
     data.first.fetch(:user)
   end
 
+  def get_base_oncall_user(params = {})
+    data = get_resources(:oncalls, params)
+    raise Exceptions::NoOncallUser if data.empty?
+
+    data.first.fetch(:user)
+  end
+
   def get_incident(id = '404stub')
     response = http.get "/incidents/#{id}"
     raise Exceptions::IncidentNotFound if response.status == 404
