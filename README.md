@@ -77,8 +77,10 @@ pager resolve <incident ID>        - Resolve a specific incident
 ### Schedules
 
 ```
-pager oncall - List available schedules
-pager oncall <schedule> - Show who is on call for the given schedule
+pager oncall                       - List available schedules
+pager oncall <schedule>            - Show who is on call for the given schedule
+pager base                         - List available schedules (uses the same call as `oncall` above.)
+pager base <schedule>              - Show the base layer of a schedule. This is useful if your schedule has a foundation rotation (eg weekly), with layers on top.
 ```
 
 ## License

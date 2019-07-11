@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Commands
   module Base
     def self.included(base)

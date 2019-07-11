@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Store
   def initialize(redis)
     @redis = redis

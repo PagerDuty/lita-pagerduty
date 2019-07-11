@@ -1,4 +1,8 @@
-class Pagerduty
+# frozen_string_literal: true
+
+require 'pdtime'
+
+class Pagerduty # rubocop:disable Metrics/ClassLength
   attr_reader :http, :teams
 
   def initialize(http, token, email, teams = [])
@@ -7,6 +11,10 @@ class Pagerduty
 
     http.url_prefix = 'https://api.pagerduty.com/'
     http.headers = auth_headers(email, token)
+  end
+
+  def log
+    Lita.logger
   end
 
   def get_incidents(params = {})
@@ -34,18 +42,61 @@ class Pagerduty
     data = get_resources(:oncalls, params)
     raise Exceptions::NoOncallUser if data.empty?
 
-    data.first.fetch(:user)
+    data.first[:user]
   end
 
-  def get_incident(id = '404stub')
-    response = http.get "/incidents/#{id}"
+  def get_user(id)
+    raise(ArgumentError, 'Id not provided') unless id
+
+    response = http.get("/users/#{id}")
+    raise Exceptions::NoUser if response.status == 404
+
+    parse_json_response(response, :user)
+  end
+
+  def get_layer(id, range_begin, range_end)
+    # Get the schedule with extra stuff resolved because we've passed through
+    # the current time.
+    url = "/schedules/#{id}?since=#{range_begin}&until=#{range_end}"
+    response = http.get(url)
+    raise Exceptions::ScheduleNotFound if response.status == 404
+
+    last_layer = parse_json_response(response, :schedule)[:schedule_layers].last
+
+    if last_layer[:rendered_schedule_entries].empty?
+      raise Exceptions::PeriodNotProvided
+    end
+
+    last_layer
+  end
+
+  def get_base_layer(id, timezone)
+    time_range = PDTime.get_time_range(timezone)
+
+    layer = get_layer(id, time_range['now_begin'], time_range['now_end'])
+
+    layer_entry = layer[:rendered_schedule_entries].first
+    user = layer_entry[:user]
+
+    {
+      'layer_name' => layer[:name],
+      'user' => user,
+      'end' => layer_entry[:end],
+      'now' => time_range['now_begin']
+    }
+  end
+
+  def get_incident(id)
+    raise(ArgumentError, 'Id not provided') unless id
+
+    response = http.get("/incidents/#{id}")
     raise Exceptions::IncidentNotFound if response.status == 404
 
     parse_json_response(response, :incident)
   end
 
   def get_notes_by_incident_id(incident_id)
-    response = http.get "/incidents/#{incident_id}/notes"
+    response = http.get("/incidents/#{incident_id}/notes")
     raise Exceptions::IncidentNotFound if response.status == 404
 
     data = parse_json_response(response, :notes, [])
@@ -59,7 +110,7 @@ class Pagerduty
       { id: id, type: 'incident_reference', status: "#{action}d" }
     end
     payload = { incidents: incidents }
-    response = http.put '/incidents', payload
+    response = http.put('/incidents', payload)
     raise Exceptions::IncidentManageUnsuccess if response.status != 200
 
     response
@@ -102,7 +153,7 @@ class Pagerduty
   end
 
   # Returns a payload for overriding a schedule and putting the user
-  # identified by +user_id+ on-call for the period defined by +minutes+
+  # identified by +user_id+ on call for the period defined by +minutes+
   def override_payload(user_id, minutes)
     # start 10 sec from now
     from = ::Time.now.utc + 10

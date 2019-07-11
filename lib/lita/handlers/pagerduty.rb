@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Lita
   module Handlers
     class Pagerduty < Handler
@@ -23,7 +25,7 @@ module Lita
       def method_missing(method, message)
         super if COMMANDS.map { |i| i['method'] }.include? method
         response = Object.const_get(
-          'Commands::' << method.to_s.split('_').map(&:capitalize).join
+          'Commands::' + method.to_s.split('_').map(&:capitalize).join
         ).send(:call, message, pagerduty, store)
         handle_response(message, response) if response
       end
