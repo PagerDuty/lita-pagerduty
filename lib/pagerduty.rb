@@ -1,3 +1,5 @@
+require 'tzinfo'
+
 class Pagerduty
   attr_reader :http, :teams
 
@@ -73,10 +75,11 @@ class Pagerduty
     # Get now in the timezone of the schedule.
 
     log.debug(timezone)
-#     tzinfo::Timezone.get(timezone)
-#     utc_offset = timezone.current_period.utc_total_offset_rational.numerator
+    timezone_object = ::TZInfo::Timezone.get(timezone)
+    utc_offset = timezone_object.current_period.utc_total_offset_rational.numerator
 
-    utc_offset = -7
+    #utc_offset = -7
+    log.debug(utc_offset)
     local = DateTime.now
     now_begin = local.new_offset(Rational(utc_offset, 24)).strftime("%Y-%m-%dT%H:%M:00")
     now_end = local.new_offset(Rational(utc_offset, 24)).strftime("%Y-%m-%dT%H:%M:01")
