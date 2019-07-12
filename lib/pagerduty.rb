@@ -9,6 +9,10 @@ class Pagerduty
     http.headers = auth_headers(email, token)
   end
 
+  def log
+    Lita.logger
+  end
+
   def get_incidents(params = {})
     data = get_resources(:incidents, params)
     raise Exceptions::IncidentsEmptyList if data.empty?
@@ -34,14 +38,52 @@ class Pagerduty
     data = get_resources(:oncalls, params)
     raise Exceptions::NoOncallUser if data.empty?
 
-    data.first.fetch(:user)
+    data[:user]
   end
 
-  def get_base_oncall_user(params = {})
-    data = get_resources(:oncalls, params)
-    raise Exceptions::NoOncallUser if data.empty?
+#   def get_user(params = {})
+#     data = get_resources(:users, params)
+#     raise Exceptions::NoOncallUser if data.empty?
+# 
+#     pp(data)
+#     data.first
+#   end
 
-    data.first.fetch(:user)
+  def get_user(id = '404stub')
+    response = http.get "/users/#{id}"
+    raise Exceptions::NoOncallUser if response.status == 404 # TODO Update the exception being used here.
+    data = parse_json_response(response, :user)
+  end
+
+  def get_base_layer(id = '404stub')
+    # response = http.get "/schedules/#{id}?since=2019-06-28T06:00:00&until=2019-06-28T06:01:00" # Kevin
+    response = http.get "/schedules/#{id}?since=2019-07-11T06:00:00&until=2019-07-11T06:01:00" # Oleksiy
+    raise Exceptions::IncidentNotFound if response.status == 404 # TODO Update the exception being used here.
+    data = parse_json_response(response, :schedule)
+    #   * .schedule.schedule_layers[-1].rendered_schedule_entries[0].user - Weekly schedule. - This.
+    last_layer = data[:schedule_layers].last
+    layer_name = last_layer[:name]
+
+    todothing = last_layer[:rendered_schedule_entries].first # TODO change the variable name.
+    user = todothing[:user]
+    user_id = user[:id]
+    
+    
+    
+    log.debug(layer_name)
+    log.debug(user[:summary])
+    
+    output = Hash.new
+    output['layer_name'] = layer_name
+    output['user'] = user
+    
+    output
+
+
+#     data = get_resources(:oncalls, params)
+#     raise Exceptions::NoOncallUser if data.empty?
+#
+#     data.first.fetch(:user)
   end
 
   def get_incident(id = '404stub')

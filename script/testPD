@@ -15,10 +15,7 @@ fi
 set -ex
 
 endpoint="$1"
-shift
 
 curl -H "Accept: application/vnd.pagerduty+json;version=2;charset=utf8" -H "Content-Type: application/json;charset=utf8" -H "From: kevin.sandom@elastic.co" \
   -H "Authorization: Token token=$PAGERDUTY_TOKEN" \
-  -H "Since: 2019-07-11T00:00:00" \
-  -H "Until: 2019-07-12T00:00:00" \
-  https://api.pagerduty.com$endpoint "$@" | jq .
+  https://api.pagerduty.com$endpoint | jq .
