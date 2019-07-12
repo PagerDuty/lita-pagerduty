@@ -6,6 +6,8 @@ module Exceptions
   class IncidentManageUnsuccess < StandardError; end
   class OverrideUnsuccess < StandardError; end
   class IncidentNotFound < StandardError; end
+  class ScheduleNotFound < StandardError; end
   class UserNotIdentified < StandardError; end
   class NoOncallUser < StandardError; end
+  class NoUser < StandardError; end
 end

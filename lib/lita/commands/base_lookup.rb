@@ -22,11 +22,6 @@ module Commands
       @schedule_name ||= message.match_data[1].strip
     end
 
-#     def oncall_user_params
-#       { 'user_ids[]' => base_layer['users'][:id], 'include[]' => 'user' }
-#     end
-
-
     def success_params
       {
         name: user[:summary],
@@ -37,7 +32,7 @@ module Commands
     end
 
     def base_layer
-      @base_layer ||= pagerduty.get_base_layer schedule[:id]
+      @base_layer ||= pagerduty.get_base_layer schedule[:id],schedule[:time_zone]
     end
 
     def user

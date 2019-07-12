@@ -90,7 +90,7 @@ en:
           no_matching_schedule: "No matching schedules found for '%{schedule_name}'"
           no_one_on_call: "No one is currently on call for %{schedule_name}"
         base_lookup:
-          response: "%{name} (%{email}) is on call this week for %{schedule_name}:%{layer_name}"
+          response: "%{name} (%{email}) is on call in the base layer (%{layer_name}) of %{schedule_name}"
           no_matching_schedule: "No matching schedules found for '%{schedule_name}'"
           no_one_on_call: "No one is currently on call for %{schedule_name}"
         pager_me:

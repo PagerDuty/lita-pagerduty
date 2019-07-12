@@ -13,6 +13,10 @@ class Pagerduty
     Lita.logger
   end
 
+#   def tzinfo
+#     TZInfo
+#   end
+
   def get_incidents(params = {})
     data = get_resources(:incidents, params)
     raise Exceptions::IncidentsEmptyList if data.empty?
@@ -41,6 +45,16 @@ class Pagerduty
     data[:user]
   end
 
+# TODO Remove this unless we can find the cause of the problem.
+# This is my original code. It would be great if we could get it to work, because it would fit with the surrounding code, but it just wasn't picking up the ID, so it was simply returning everything.
+# I beleive it needs to be called with something like from base_lookup.rb:
+#     def oncall_user_params
+#       { 'user_ids[]' => base_layer['users'][:id], 'include[]' => 'user' }
+#     end
+# and
+#     @user ||= pagerduty.get_user oncall_user_params
+
+# Original code ---v
 #   def get_user(params = {})
 #     data = get_resources(:users, params)
 #     raise Exceptions::NoOncallUser if data.empty?
@@ -51,39 +65,46 @@ class Pagerduty
 
   def get_user(id = '404stub')
     response = http.get "/users/#{id}"
-    raise Exceptions::NoOncallUser if response.status == 404 # TODO Update the exception being used here.
+    raise Exceptions::NoUser if response.status == 404
     data = parse_json_response(response, :user)
   end
 
-  def get_base_layer(id = '404stub')
-    # response = http.get "/schedules/#{id}?since=2019-06-28T06:00:00&until=2019-06-28T06:01:00" # Kevin
+  def get_base_layer(id = '404stub', timezone)
+    # Get now in the timezone of the schedule.
+
+    log.debug(timezone)
+#     tzinfo::Timezone.get(timezone)
+#     utc_offset = timezone.current_period.utc_total_offset_rational.numerator
+
+    utc_offset = -7
+    local = DateTime.now
+    now_begin = local.new_offset(Rational(utc_offset, 24)).strftime("%Y-%m-%dT%H:%M:00")
+    now_end = local.new_offset(Rational(utc_offset, 24)).strftime("%Y-%m-%dT%H:%M:01")
+
+    log.debug(now_begin)
+    log.debug(now_end)
+
+    # Get the schedule with extra stuff resolved because we've passed through the current time.
     response = http.get "/schedules/#{id}?since=2019-07-11T06:00:00&until=2019-07-11T06:01:00" # Oleksiy
-    raise Exceptions::IncidentNotFound if response.status == 404 # TODO Update the exception being used here.
-    data = parse_json_response(response, :schedule)
-    #   * .schedule.schedule_layers[-1].rendered_schedule_entries[0].user - Weekly schedule. - This.
-    last_layer = data[:schedule_layers].last
+    raise Exceptions::ScheduleNotFound if response.status == 404
+
+    # Get out useful data.
+    last_layer = parse_json_response(response, :schedule)[:schedule_layers].last
     layer_name = last_layer[:name]
 
     todothing = last_layer[:rendered_schedule_entries].first # TODO change the variable name.
     user = todothing[:user]
     user_id = user[:id]
-    
-    
-    
+
     log.debug(layer_name)
     log.debug(user[:summary])
-    
+
+    # Get it ready to send back.
     output = Hash.new
     output['layer_name'] = layer_name
     output['user'] = user
-    
+
     output
-
-
-#     data = get_resources(:oncalls, params)
-#     raise Exceptions::NoOncallUser if data.empty?
-#
-#     data.first.fetch(:user)
   end
 
   def get_incident(id = '404stub')
