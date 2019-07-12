@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-#gem "tzinfo" # TODO Is this needed?
+gem "tzinfo"
 gemspec
