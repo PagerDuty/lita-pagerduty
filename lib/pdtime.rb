@@ -8,6 +8,7 @@ class PDTime
       utc_offset = 0
     else
       timezone = ::TZInfo::Timezone.get(timezone)
+
       current_period = timezone.current_period
       utc_offset = current_period.utc_total_offset_rational.numerator
     end
@@ -22,7 +23,7 @@ class PDTime
     local.new_offset(Rational(utc_offset, 24))
   end
 
-  def self.get_time_range(timezone)
+  def self.only_now(timezone)
     now_unformatted = get_now_unformatted(timezone)
 
     now_begin = now_unformatted.strftime('%Y-%m-%dT%H:%M:00')

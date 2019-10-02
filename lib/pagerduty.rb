@@ -70,9 +70,7 @@ class Pagerduty # rubocop:disable Metrics/ClassLength
     last_layer
   end
 
-  def get_base_layer(id, timezone)
-    time_range = PDTime.get_time_range(timezone)
-
+  def get_base_layer(id, time_range)
     layer = get_layer(id, time_range['now_begin'], time_range['now_end'])
 
     layer_entry = layer[:rendered_schedule_entries].first

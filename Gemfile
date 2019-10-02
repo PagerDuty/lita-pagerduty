@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-gem "tzinfo"
+gem "tzinfo", '~> 1.2.3'
 gemspec

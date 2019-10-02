@@ -38,8 +38,9 @@ module Commands
     def base_layer
       id = schedule[:id]
       time_zone = schedule[:time_zone]
+      time_range = PDTime.only_now(time_zone)
 
-      @base_layer ||= pagerduty.get_base_layer(id, time_zone)
+      @base_layer ||= pagerduty.get_base_layer(id, time_range)
     end
 
     def user
