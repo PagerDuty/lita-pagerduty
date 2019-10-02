@@ -30,4 +30,12 @@ class PDTime
       'now_end' => now_end
     }
   end
+
+  def self.get_last_day_of_month(month_number)
+    local = DateTime.now
+    now_unformatted = local.new_offset(Rational(0, 24))
+    year = now_unformatted.strftime('%Y').to_i
+
+    Date.civil(year, month_number, -1).strftime('%d').to_i
+  end
 end
