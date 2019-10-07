@@ -93,7 +93,7 @@ class PDTime
     requested_year = year + year_offset
 
     {
-      'now_begin' => requested_year.to_s + '01-01T00:00:00',
+      'now_begin' => requested_year.to_s + '-01-01T00:00:00',
       'now_end' => requested_year.to_s + '-12-31T23:59:59'
     }
   end

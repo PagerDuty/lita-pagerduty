@@ -43,7 +43,7 @@ module Commands
         layer_name: users['layer_name'],
         schedule_name: schedule[:name],
         layer_entries: users['layer_entries'].join("\n"),
-        override_entries: users['override_entries']
+        override_entries: users['override_entries'].join("\n")
       }
     end
 
