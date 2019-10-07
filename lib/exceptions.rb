@@ -14,4 +14,5 @@ module Exceptions
   class NoUser < StandardError; end
   class PeriodNotProvided < StandardError; end
   class NoTimeZone < StandardError; end
+  class UnknownUnit < StandardError; end
 end

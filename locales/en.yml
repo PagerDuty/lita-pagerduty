@@ -100,6 +100,7 @@ en:
           response: "People on call for (%{layer_name}) of %{schedule_name}:\n%{layer_entries}\n\nOverrides:\n%{override_entries}"
           no_matching_schedule: "No matching schedules found for '%{schedule_name}'"
           no_one_on_call: "No one is currently on call for %{schedule_name}"
+          unknown_unit: "I don't know the unit #{unit}. Expecting month or year."
         pager_me:
           success: "%{name} (%{email}) is now on call until %{finish}"
           failure: "failed to take the pager"

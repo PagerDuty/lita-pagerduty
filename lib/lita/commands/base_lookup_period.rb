@@ -56,7 +56,15 @@ module Commands
       elsif unit == 'year'
         time_range = PDTime.get_whole_year(time_zone, offset)
       else
-        # TODO raise an exception.
+        # TODO This doesn't work.
+#         rescue Exceptions::UnknownUnit
+#           response message: 'base_lookup_period.unknown_unit',
+#                   params: {unit: unit}
+        # It gives
+#         SyntaxError: /home/ksandom/files/work/elastic/tasks/litabot/lita-pagerduty2/lib/lita/commands/base_lookup_period.rb:59: syntax error, unexpected keyword_rescue
+#                 rescue Exceptions::UnknownUnit
+#                 ^~~~~~
+
       end
 
       @users ||= pagerduty.get_users_from_layers(id, time_range)

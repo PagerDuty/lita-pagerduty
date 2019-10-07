@@ -118,17 +118,17 @@ class Pagerduty # rubocop:disable Metrics/ClassLength
     users = []
 
     layer[:rendered_schedule_entries].each do |entry|
-      unless entry[:user].nil?
-        # We only want to query the API once per user.
-        user_cache[entry[:user][:id]] ||= get_user(entry[:user][:id])
+      next if entry[:user].nil?
 
-        users << {
-          start: entry[:start],
-          end: entry[:end],
-          summary: entry[:user][:summary],
-          email: user_cache[entry[:user][:id]][:email]
-        }
-      end
+      # We only want to query the API once per user.
+      user_cache[entry[:user][:id]] ||= get_user(entry[:user][:id])
+
+      users << {
+        start: entry[:start],
+        end: entry[:end],
+        summary: entry[:user][:summary],
+        email: user_cache[entry[:user][:id]][:email]
+      }
     end
 
     users
