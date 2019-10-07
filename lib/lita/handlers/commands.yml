@@ -28,6 +28,10 @@
   method: on_call_lookup
 - pattern: ^pager\sbase$
   method: on_call_list
+- pattern: ^pager\sbase\s(.*)\s(.*)$
+  method: base_lookup_period
+- pattern: ^pager\sbase\s(.*)\s(.*)\s(.*)$
+  method: base_lookup_period
 - pattern: ^pager\sbase\s(.*)$
   method: base_lookup
 - pattern: ^pager\s+me\s+(.+?)\s+(\d+)m?$

@@ -3,28 +3,28 @@
 require 'tzinfo'
 
 class PDTime
-  def self.get_offset_for_timezone(timezone)
-    if timezone.nil?
+  def self.get_offset_for_time_zone(time_zone)
+    if time_zone.nil?
       utc_offset = 0
     else
-      timezone = ::TZInfo::Timezone.get(timezone)
+      time_zone = ::TZInfo::Timezone.get(time_zone)
 
-      current_period = timezone.current_period
+      current_period = time_zone.current_period
       utc_offset = current_period.utc_total_offset_rational.numerator
     end
 
     utc_offset
   end
 
-  def self.get_now_unformatted(timezone)
-    utc_offset = get_offset_for_timezone(timezone)
+  def self.get_now_unformatted(time_zone)
+    utc_offset = get_offset_for_time_zone(time_zone)
 
     local = DateTime.now
     local.new_offset(Rational(utc_offset, 24))
   end
 
-  def self.only_now(timezone)
-    now_unformatted = get_now_unformatted(timezone)
+  def self.only_now(time_zone)
+    now_unformatted = get_now_unformatted(time_zone)
 
     now_begin = now_unformatted.strftime('%Y-%m-%dT%H:%M:00')
     now_end = now_unformatted.strftime('%Y-%m-%dT%H:%M:01')
@@ -61,12 +61,12 @@ class PDTime
     }
   end
 
-  def self.get_whole_month(timezone, month_offset)
-    now_unformatted = get_now_unformatted(timezone)
+  def self.get_whole_month(time_zone, month_offset)
+    now_unformatted = get_now_unformatted(time_zone)
     year_and_month = get_year_and_month(now_unformatted, month_offset)
     prefix = year_and_month['year'].to_s + '-' + year_and_month['month'].to_s
 
-    last_day = get_last_day_of_month(year_and_month['month'])
+    last_day = get_last_day_of_month(year_and_month['month']).to_s
 
     {
       'now_begin' => prefix + '-01T00:00:00',
@@ -74,20 +74,20 @@ class PDTime
     }
   end
 
-  def self.get_last_month(timezone)
-    get_whole_month(timezone, -1)
+  def self.get_last_month(time_zone)
+    get_whole_month(time_zone, -1)
   end
 
-  def self.get_this_month(timezone)
-    get_whole_month(timezone, 0)
+  def self.get_this_month(time_zone)
+    get_whole_month(time_zone, 0)
   end
 
-  def self.get_next_month(timezone)
-    get_whole_month(timezone, 1)
+  def self.get_next_month(time_zone)
+    get_whole_month(time_zone, 1)
   end
 
-  def self.get_whole_year(timezone, year_offset)
-    now_unformatted = get_now_unformatted(timezone)
+  def self.get_whole_year(time_zone, year_offset)
+    now_unformatted = get_now_unformatted(time_zone)
     year = now_unformatted.strftime('%Y').to_i
 
     requested_year = year + year_offset
@@ -98,16 +98,16 @@ class PDTime
     }
   end
 
-  def self.get_last_year(timezone)
+  def self.get_last_year(time_zone)
     # I imagine this function is only useful a couple of times a year.
-    get_whole_year(timezone, 0)
+    get_whole_year(time_zone, 0)
   end
 
-  def self.get_this_year(timezone)
-    get_whole_year(timezone, 0)
+  def self.get_this_year(time_zone)
+    get_whole_year(time_zone, 0)
   end
 
-  def self.get_next_year(timezone)
-    get_whole_year(timezone, 0)
+  def self.get_next_year(time_zone)
+    get_whole_year(time_zone, 0)
   end
 end

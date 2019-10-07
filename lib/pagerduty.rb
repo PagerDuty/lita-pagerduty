@@ -46,6 +46,7 @@ class Pagerduty # rubocop:disable Metrics/ClassLength
   end
 
   def get_user(id)
+    puts "Getting user for #{id}"
     raise(ArgumentError, 'Id not provided') unless id
 
     response = http.get("/users/#{id}")
@@ -54,24 +55,28 @@ class Pagerduty # rubocop:disable Metrics/ClassLength
     parse_json_response(response, :user)
   end
 
-  def get_layer(id, range_begin, range_end)
+  def get_layers(id, range_begin, range_end)
     # Get the schedule with extra stuff resolved because we've passed through
     # the current time.
     url = "/schedules/#{id}?since=#{range_begin}&until=#{range_end}"
     response = http.get(url)
     raise Exceptions::ScheduleNotFound if response.status == 404
 
-    last_layer = parse_json_response(response, :schedule)[:schedule_layers].last
+    parse_json_response(response, :schedule)[:schedule_layers]
+  end
 
-    if last_layer[:rendered_schedule_entries].empty?
+  def get_base_layer(id, range_begin, range_end)
+    base_layer = get_layers(id, range_begin, range_end).last
+
+    if base_layer[:rendered_schedule_entries].empty?
       raise Exceptions::PeriodNotProvided
     end
 
-    last_layer
+    base_layer
   end
 
-  def get_base_layer(id, time_range)
-    layer = get_layer(id, time_range['now_begin'], time_range['now_end'])
+  def get_user_from_layer(id, time_range)
+    layer = get_base_layer(id, time_range['now_begin'], time_range['now_end'])
 
     layer_entry = layer[:rendered_schedule_entries].first
     user = layer_entry[:user]
@@ -82,6 +87,54 @@ class Pagerduty # rubocop:disable Metrics/ClassLength
       'end' => layer_entry[:end],
       'now' => time_range['now_begin']
     }
+  end
+
+  def get_users_from_layers(id, time_range)
+    layers = get_layers(id, time_range['now_begin'], time_range['now_end'])
+    base_layer = layers.last
+
+    users = get_users_from_layer(layers.last)
+    formatted_users = format_users(users)
+
+    {
+      'layer_name' => base_layer[:name],
+      'layer_entries' => formatted_users,
+      'override_entries' => []
+    }
+  end
+
+  def user_cache
+    @user_cache ||= {}
+  end
+
+  def get_users_from_layer(layer)
+    users = []
+
+    layer[:rendered_schedule_entries].each do |value|
+      unless value[:user].nil?
+        # We only want to query the API once per user.
+        user_cache[value[:user][:id]] ||= get_user(value[:user][:id])
+
+        users << {
+          start: value[:start],
+          end: value[:end],
+          summary: value[:user][:summary],
+          email: user_cache[value[:user][:id]][:email]
+        }
+      end
+    end
+
+    users
+  end
+
+  def format_users(users)
+    formatted_users = []
+    users.each do |u|
+      user = "#{u[:start]} - #{u[:start]}: #{u[:email]} (#{u[:summary]})"
+      formatted_users << user
+    end
+
+    formatted_users
   end
 
   def get_incident(id)

@@ -14,7 +14,7 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
 
     it 'no one on call' do
       expect_any_instance_of(Pagerduty).to receive(:get_schedules).and_return([{ id: 'abc123', name: 'abc', time_zone: 'America/Los_Angeles' }])
-      expect_any_instance_of(Pagerduty).to receive(:get_base_layer).and_return({ 'now' => '2019-07-31T08:56:00', 'end' => '2019-07-31T08:56:01-07:00', 'layer_name' => 'Thingery', 'user' => { id: 'abc123' } })
+      expect_any_instance_of(Pagerduty).to receive(:get_user_from_layer).and_return({ 'now' => '2019-07-31T08:56:00', 'end' => '2019-07-31T08:56:01-07:00', 'layer_name' => 'Thingery', 'user' => { id: 'abc123' } })
       expect_any_instance_of(Pagerduty).to receive(:get_user).and_raise(Exceptions::NoOncallUser)
       send_command('pager base abc')
       expect(replies.last).to eq('No one is currently on call for abc')
@@ -22,7 +22,7 @@ describe Lita::Handlers::Pagerduty, lita_handler: true do
 
     it 'somebody on call' do
       expect_any_instance_of(Pagerduty).to receive(:get_schedules).and_return([{ id: 'abc123', name: 'abc', time_zone: 'America/Los_Angeles' }])
-      expect_any_instance_of(Pagerduty).to receive(:get_base_layer).and_return({ 'now' => '2019-07-31T08:56:00', 'end' => '2019-07-31T08:56:01-07:00', 'layer_name' => 'Thingery', 'user' => { id: 'abc123' } })
+      expect_any_instance_of(Pagerduty).to receive(:get_user_from_layer).and_return({ 'now' => '2019-07-31T08:56:00', 'end' => '2019-07-31T08:56:01-07:00', 'layer_name' => 'Thingery', 'user' => { id: 'abc123' } })
       expect_any_instance_of(Pagerduty).to receive(:get_user).and_return({summary: 'foo', email: 'foo@pagerduty.com'})
       send_command('pager base abc')
       expect(replies.last).to eq('foo (foo@pagerduty.com) is on call in the base layer (Thingery) of abc.')
